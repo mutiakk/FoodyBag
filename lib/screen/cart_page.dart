@@ -1,5 +1,4 @@
 import 'package:cubaapi/model_api/food_calculate.dart';
-import 'package:cubaapi/model_api/food_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,13 +6,23 @@ import 'package:provider/provider.dart';
 import 'desc_food.dart';
 
 class CartPage extends StatefulWidget {
-  CartPage({Key? key}) : super(key: key);
+  //Map<String, dynamic> dataid;
+  const CartPage({Key? key,
+    //required this.dataid
+  }):super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
+  // getAll() async{
+  //   SharedPreferences preferences= await SharedPreferences.getInstance();
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _getFood();
+  //   });
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,4 +216,5 @@ class _CartPageState extends State<CartPage> {
           image: DecorationImage(image: NetworkImage(imag), fit: BoxFit.cover)),
     );
   }
+
 }

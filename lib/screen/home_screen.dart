@@ -23,7 +23,7 @@ class _MyHomeState extends State<MyHome> {
       //   ),
       //   backgroundColor: Colors.white,
       //   title: Text ('ReciFood', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.blueGrey,wordSpacing: 5),),
-      // ),
+      // // ),
       drawer: SideBarApp(),
       body: SingleChildScrollView(
         child: Container(

@@ -5,7 +5,7 @@ class Food {
   final String serving;
   final String person;
   final String desc;
-  final double price;
+  final int price;
   int qty;
 
   Food(
@@ -27,7 +27,7 @@ class Food {
         desc: json['description'] != null
             ? json['description']
             : "Sorry, Nothing to show..",
-        price: 5000,
+        price: json['id'],
         qty: 1,
         id: json['show_id'] as int);
   }

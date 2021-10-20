@@ -25,5 +25,5 @@ class FoodApi{
     _foodTemporary.add(u);
   }
   return Food.foodSnapshot(_foodTemporary);
-
+  
 }}

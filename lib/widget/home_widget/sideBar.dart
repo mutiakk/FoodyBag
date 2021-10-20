@@ -7,33 +7,37 @@ class SideBarApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(child: ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        DrawerHeader(
-          child: Text(
-            'Side menu',
-            style: TextStyle(color: Colors.white, fontSize: 25),
+    return Container(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width*0.85,
+          child:Drawer(child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text(
+              'Side menu',
+              style: TextStyle(color: Colors.white, fontSize: 25),
+            ),
+            decoration: BoxDecoration(
+                color: Colors.grey,)),
+          ListTile(
+            leading: Icon(Icons.input),
+            title: Text('Welcome'),
+            onTap: () => {Navigator.of(context).pop()},
           ),
-          decoration: BoxDecoration(
-              color: Colors.grey,)),
-        ListTile(
-          leading: Icon(Icons.input),
-          title: Text('Welcome'),
-          onTap: () => {Navigator.of(context).pop()},
-        ),
-        ListTile(
-          leading: Icon(Icons.shopping_cart),
-          title: Text('Cart'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CartPage()),
-            );
-          },
-        ),
-      ],
-    ),
+          ListTile(
+            leading: Icon(Icons.shopping_cart),
+            title: Text('Cart'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CartPage()),
+              );
+            },
+          ),
+        ],
+      ),)
+      ),
     );
   }
 }
