@@ -1,9 +1,30 @@
 import 'package:cubaapi/screen/cart_page.dart';
+import 'package:cubaapi/screen/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SideBarApp extends StatelessWidget {
-
+class SideBarApp extends StatefulWidget {
   const SideBarApp({Key? key}) : super(key: key);
+
+  @override
+  _SideBarAppState createState() => _SideBarAppState();
+}
+
+class _SideBarAppState extends State<SideBarApp> {
+  String token = "";
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  void getData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = pref.getString("login")!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +54,18 @@ class SideBarApp extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => CartPage()),
               );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: ()async {
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              await pref.clear();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                      (route) => false);
             },
           ),
         ],

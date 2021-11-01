@@ -1,7 +1,6 @@
-import 'package:cubaapi/screen/desc_food.dart';
+import 'package:cubaapi/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'model_api/food_calculate.dart';
 import 'screen/home_screen.dart';
 
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHome(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
