@@ -2,14 +2,18 @@
 //
 //     final listUser = listUserFromJson(jsonString);
 
+// To parse this JSON data, do
+//
+//     final user = userFromJson(jsonString);
+
 import 'dart:convert';
 
-ListUser listUserFromJson(String str) => ListUser.fromJson(json.decode(str));
+User userFromJson(String str) => User.fromJson(json.decode(str));
 
-String listUserToJson(ListUser data) => json.encode(data.toJson());
+String userToJson(User data) => json.encode(data.toJson());
 
-class ListUser {
-  ListUser({
+class User {
+  User({
     required this.msg,
     required this.token,
     required this.user,
@@ -17,12 +21,12 @@ class ListUser {
 
   String msg;
   String token;
-  User user;
+  UserClass user;
 
-  factory ListUser.fromJson(Map<String, dynamic> json) => ListUser(
+  factory User.fromJson(Map<String, dynamic> json) => User(
     msg: json["msg"],
     token: json["token"],
-    user: User.fromJson(json["user"]),
+    user: UserClass.fromJson(json["user"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,8 +36,8 @@ class ListUser {
   };
 }
 
-class User {
-  User({
+class UserClass {
+  UserClass({
     required this.id,
     required this.username,
     required this.password,
@@ -45,14 +49,14 @@ class User {
   String username;
   String password;
   DateTime registered;
-  String login;
+  DateTime login;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory UserClass.fromJson(Map<String, dynamic> json) => UserClass(
     id: json["id"],
     username: json["username"],
     password: json["password"],
     registered: DateTime.parse(json["registered"]),
-    login: json["login"],
+    login: DateTime.parse(json["login"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -60,9 +64,10 @@ class User {
     "username": username,
     "password": password,
     "registered": registered.toIso8601String(),
-    "login": login,
+    "login": login.toIso8601String(),
   };
 }
+
 
 // import 'dart:convert';
 //

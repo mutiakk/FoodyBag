@@ -1,5 +1,5 @@
 class Env{
-  String baseURL="http://localhost:3000";
+  String baseURL="http://10.0.2.2:3000";
 
   Uri postLoginCustomer() {
     return Uri.parse(baseURL + "/api/login");
