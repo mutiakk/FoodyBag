@@ -31,6 +31,8 @@ dependencies:
   http:
   provider: ^6.0.0
   shared_preferences:
+  loading_indicator: ^3.0.2
+  carousel_slider:
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +55,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - asset/login.png
+    - asset/food.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

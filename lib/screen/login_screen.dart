@@ -25,10 +25,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    checkLogin();
+    //checkLogin();
     super.initState();
   }
- //hiding pass
+
+  //hiding pass
   void _password() {
     setState(() {
       _passHide = !_passHide;
@@ -42,13 +43,22 @@ class _LoginPageState extends State<LoginPage> {
           body: jsonEncode({
             "username": emailControl.text,
             "password": passControl.text,
-          }),headers: {"Content-Type": "application/json"});
+          }),
+          headers: {"Content-Type": "application/json"});
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         print("login token " + body["msg"]);
         // List<User> userModel=(body['user']as Iterable).map((e) => User.fromJson(e)).toList();
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("user", body['token'] );
+        await prefs.setString("user", body['token']);
+        Map<String, dynamic> user = {
+          'id': body['user']["username"],
+          'username': body['user']["username"],
+          'password': body['user']["password"],
+          'registered': body['user']["registered"],
+          'login': body['user']["login"],
+        };
+        await prefs.setString("login", jsonEncode(user));
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body["msg"])));
         //awaitW prefs.setStringList("login", body['user'].toJson());
@@ -77,15 +87,14 @@ class _LoginPageState extends State<LoginPage> {
     // }
   }
 
-
-  void checkLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? value = prefs.getString("login");
-    if (value != null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MyHome()), (route) => false);
-    }
-  }
+  // void checkLogin() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? value = prefs.getString("login");
+  //   if (value != null) {
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //         MaterialPageRoute(builder: (context) => MyHome()), (route) => false);
+  //   }
+  // }
 
   void _loadDialog(String text) {
     showDialog(
@@ -111,8 +120,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: SingleChildScrollView(child: Column(children: [
+        body: Center(
+      child: SingleChildScrollView(
+          child: Column(children: [
         Container(
           margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(20),
@@ -132,11 +142,14 @@ class _LoginPageState extends State<LoginPage> {
             child: formSignIn(),
           ),
         ),
-            TextButton(
-                onPressed:(){Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegistPage()),
-                );}, child: Text('Register Yok'))
+        TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegistPage()),
+              );
+            },
+            child: Text('Register Yok'))
       ])),
     ));
   }

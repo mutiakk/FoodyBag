@@ -30,8 +30,6 @@ class _RegistPageState extends State<RegistPage> {
   }
 
   void _regist() async {
-    // bikin password 1 ama 2 sama (validate)
-
     //Ga boleh kosong
     if (emailControl.text.isNotEmpty &&
         passControl.text.isNotEmpty &&
@@ -51,7 +49,12 @@ class _RegistPageState extends State<RegistPage> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LoginPage()),
             (route) => false);
-      } else {
+      } else if(response.statusCode == 400){
+        final body = jsonDecode(response.body);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(body['msg'])));
+      }
+      else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('unsucces')));
       }

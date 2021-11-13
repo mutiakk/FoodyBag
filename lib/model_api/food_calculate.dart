@@ -3,14 +3,16 @@ import 'dart:collection';
 import 'package:cubaapi/model_api/food_model.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'foodModel2.dart';
+
 class Price with ChangeNotifier {
-  List<Food> _product = [];
+  List<FoodModel> _product = [];
 
   //UnmodifiableListView<Food> get items => UnmodifiableListView(_product);
   double _price = 0.0;
   var c = 0;
 
-  void add(Food food) {
+  void add(FoodModel food) {
     int index = _product.indexWhere((i) => i.name == food.name);
     print(index);
     if (index != -1)
@@ -23,7 +25,7 @@ class Price with ChangeNotifier {
   }
 
 
-  void remove(Food food) {
+  void remove(FoodModel food) {
     int index = _product.indexWhere((i) => i.name == food.name);
     _product[index].qty = 1;
     _product.removeWhere((item) => item.name == food.name);
@@ -45,7 +47,7 @@ class Price with ChangeNotifier {
     return _price;
   }
 
-  List<Food> get item {
+  List<FoodModel> get item {
     return _product;
   }
 
@@ -56,7 +58,7 @@ class Price with ChangeNotifier {
     });
   }
 
-  void updateProduct(Food food, qty) {
+  void updateProduct(FoodModel food, qty) {
     int index = _product.indexWhere((i) => i.name == food.name);
     _product[index].qty = qty;
     if (_product[index].qty == 0) remove(food);

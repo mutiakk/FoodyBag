@@ -8,24 +8,44 @@ class HelloWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 100,
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      height: 150,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30)),
+          ),
       child: Stack(
         children: [
+
           Align(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only (top:10),
-                  margin: EdgeInsets.all(5),
-                  child: Text('HALLO FOODY! ',style: TextStyle(fontSize: 20, letterSpacing: 10,fontWeight: FontWeight.bold,color: Colors.blueGrey),textAlign: TextAlign.left),
-                ),
-                Container(
-                  padding: EdgeInsets.only (left: 15,top: 10),
-                  margin: EdgeInsets.all(2),
-                  child: Text('Mau masak apa hari ini?',style: TextStyle(fontSize: 15,color: Colors.blueGrey),),
-                )
+                    padding: EdgeInsets.only(top: 10),
+                    child: Column(children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text('HALLO FOODY! ',
+                            style: TextStyle(
+                                fontSize: 30,
+                                letterSpacing: 5,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                            textAlign: TextAlign.left),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Mau masak apa hari ini?',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[65]),
+                            textAlign: TextAlign.left
+                        ),
+                      )
+                    ])),
               ],
             ),
             alignment: Alignment.centerLeft,

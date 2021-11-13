@@ -3,8 +3,8 @@
 import 'package:cubaapi/screen/user_screen.dart';
 import 'package:flutter/material.dart';
 
-class BarBar extends StatelessWidget {
-  const BarBar({Key? key}) : super(key: key);
+class AppBarHome extends StatelessWidget {
+  const AppBarHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +20,9 @@ class BarBar extends StatelessWidget {
                     onPressed: () => Scaffold.of(context).openDrawer(),
                     icon: Icon(
                       Icons.format_list_bulleted_outlined,
-                      color: Colors.blueGrey,
+                      color: Colors.white,
                       size: 30,
                     )),
-                Text(
-                  'ReciFood',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueGrey,
-                      wordSpacing: 5),
-                ),
                 IconButton(
                     onPressed: () {
                       Navigator.push(context,
@@ -38,7 +30,7 @@ class BarBar extends StatelessWidget {
                     },
                     icon: Icon(
                       Icons.account_circle,
-                      color: Colors.blueGrey,
+                      color: Colors.white,
                       size: 30,
                     ))
               ],

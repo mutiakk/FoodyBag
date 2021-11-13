@@ -1,4 +1,6 @@
+import 'package:cubaapi/screen/listFoodBackEnd.dart';
 import 'package:cubaapi/screen/login_screen.dart';
+import 'package:cubaapi/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model_api/food_calculate.dart';
@@ -18,11 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'FoodyBag',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

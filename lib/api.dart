@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class Env{
   String baseURL="http://10.0.2.2:3000";
 
@@ -6,5 +8,8 @@ class Env{
   }
   Uri postRegistCustomer() {
     return Uri.parse(baseURL + "/api/sign-up");
+  }
+  Uri getListProduct(){
+    return Uri.parse(baseURL+"/api/listProduct");
   }
 }

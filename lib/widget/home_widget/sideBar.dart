@@ -1,4 +1,5 @@
 import 'package:cubaapi/screen/cart_page.dart';
+import 'package:cubaapi/screen/listFoodBackEnd.dart';
 import 'package:cubaapi/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,6 +69,15 @@ class _SideBarAppState extends State<SideBarApp> {
                       (route) => false);
             },
           ),
+          ListTile(
+            title: Text('COBA'),
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ListProduct()),
+              );
+            },
+          )
         ],
       ),)
       ),

@@ -1,3 +1,4 @@
+import 'package:cubaapi/screen/listFoodBackEnd.dart';
 import 'package:cubaapi/screen/list_screen.dart';
 import 'package:cubaapi/widget/home_widget/appBar.dart';
 import 'package:cubaapi/widget/home_widget/sideBar.dart';
@@ -13,6 +14,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,27 +35,23 @@ class _MyHomeState extends State<MyHome> {
               Container(
                 height: 250,
                 decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.orangeAccent,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30))),
-                child: Column(
-                  children: [
-                    BarBar(),
-                    HelloWidget(),
-                  ],
+                child: Column(children: [
+                  AppBarHome(),
+                  HelloWidget(),
+                ])),
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(30),
+                          topLeft: Radius.circular(30))),
+                  child: ListProduct(),
                 ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: Colors.black12.withOpacity(0.5),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(30),
-                        topLeft: Radius.circular(30))),
-                child: ListFood(rate: '', title: '', person: '', thumb: '',desc:''),
-              ),
             ],
           ),
         ),

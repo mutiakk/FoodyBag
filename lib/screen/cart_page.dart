@@ -109,7 +109,7 @@ class _CartPageState extends State<CartPage> {
                                       children: [
                                         Expanded(
                                           child: buildImage(
-                                              "${co.item[i].images}"),
+                                              "${co.item[i].image}"),
                                         ),
                                         // child: Image.network(
                                         //     "${co.item[i].images}",height: 100,width:100 ,)),
