@@ -20,22 +20,20 @@ class ListProduct extends StatefulWidget {
 }
 
 class _ListProductState extends State<ListProduct> {
-  List<FoodModel> foody = [];
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    getData().toString();
+    getDataList();
   }
 
-  getData() async {
-    foody = await getDataList();
-    setState(() {});
-  }
+  // getData() async {
+  //   foody = await getDataList();
+  //   setState(() {});
+  // }
 
-  Future getDataList() async {
-    try {
+  getDataList() async {
       final response = await http.get(Env().getListProduct());
       if (response.statusCode == 200) {
         setState(() {
@@ -43,12 +41,10 @@ class _ListProductState extends State<ListProduct> {
         });
         Iterable it = jsonDecode(response.body);
         print(response.body);
-        List<FoodModel> food = it.map((e) => FoodModel.fromJson(e)).toList();
-        return food;
+        FoodItem.foody = it.map((e) => FoodModel.fromJson(e)).toList();
+        // List<FoodModel> food = it.map((e) => FoodModel.fromJson(e)).toList();
+        return FoodItem.foody;
       }
-    } catch (e) {
-      print(e.toString());
-    }
   }
 
   @override
@@ -71,13 +67,14 @@ class _ListProductState extends State<ListProduct> {
                         topLeft: Radius.circular(30))),
                 child: ListView.separated(
                     itemBuilder: (context, i) {
+                      final data= FoodItem.foody[i];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                               context,
                               CustomHero(
                                   page: DescFood(
-                                data: {'example': foody[i]},
+                                data : data,
                               )));
                         },
                         child: Container(
@@ -94,15 +91,15 @@ class _ListProductState extends State<ListProduct> {
                             ],
                           ),
                           width: MediaQuery.of(context).size.width,
-                          child: imageFood(foody[i].name,
-                              foody[i].price.toString(), foody[i].image),
+                          child: imageFood(FoodItem.foody[i].name,
+                              FoodItem.foody[i].price.toString(), FoodItem.foody[i].image),
                         ),
                       );
                     },
                     separatorBuilder: (context, i) {
                       return Divider();
                     },
-                    itemCount: foody.length)));
+                    itemCount: FoodItem.foody.length)));
   }
 }
 
@@ -147,40 +144,3 @@ Widget imageFood(String name, String price, String image) {
       ));
 }
 
-// Widget slider() {
-//   return ListView(
-//     children: [
-//       CarouselSlider(
-//           items: ["ayam", "bebek"].map((i) {
-//             return Builder(
-//               builder: (BuildContext context) {
-//                 return Container(
-//                     width: MediaQuery.of(context).size.width,
-//                     margin: EdgeInsets.symmetric(horizontal: 5.0),
-//                     decoration: BoxDecoration(color: Colors.amber),
-//                     child: Text(
-//                       'text $i',
-//                       style: TextStyle(fontSize: 16.0),
-//                     ));
-//               },
-//             );
-//           }).toList(),
-//           options: CarouselOptions(
-//             height: 400,
-//             aspectRatio: 16/9,
-//             viewportFraction: 0.8,
-//             initialPage: 0,
-//             enableInfiniteScroll: true,
-//             reverse: false,
-//             autoPlay: true,
-//             autoPlayInterval: Duration(seconds: 3),
-//             autoPlayAnimationDuration: Duration(milliseconds: 800),
-//             autoPlayCurve: Curves.fastOutSlowIn,
-//             enlargeCenterPage: true,
-//             scrollDirection: Axis.horizontal,
-//           ))
-//     ],
-//   );
-// }
-
-// class CarouselSlider {}

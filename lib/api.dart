@@ -12,4 +12,10 @@ class Env{
   Uri getListProduct(){
     return Uri.parse(baseURL+"/api/listProduct");
   }
+  Uri postCartProduct(){
+    return Uri.parse(baseURL+"/api/addToCart");
+  }
+  Uri getCartProduct(){
+    return Uri.parse(baseURL+"/api/listCart");
+  }
 }

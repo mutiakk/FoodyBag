@@ -1,17 +1,23 @@
+import 'dart:convert';
+
 import 'package:cubaapi/model_api/foodModel2.dart';
 import 'package:cubaapi/model_api/food_calculate.dart';
+import 'package:cubaapi/model_api/food_cart.dart';
 import 'package:cubaapi/screen/cart_page.dart';
+import 'package:cubaapi/screen/keranjang.dart';
 import 'package:cubaapi/widget/CustomPageHero.dart';
 import 'package:cubaapi/widget/desc_widget/appBarDesc.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../api.dart';
 import 'cobacart.dart';
 
 class DescFood extends StatefulWidget {
-  Map<String, dynamic> data;
+  //Map<String, dynamic> data;
 
-  //final Food food;
+  final FoodModel data;
 
   DescFood({Key? key, required this.data});
 
@@ -22,38 +28,69 @@ class DescFood extends StatefulWidget {
 
 class _DescFoodState extends State<DescFood> {
   List<FoodModel> cartItems = [];
-  late int selected;
+  late final FoodModel foods;
+  late int selected = 0;
 
   @override
   void initState() {
     super.initState();
   }
 
+  void counterPlus() {
+    setState(() {
+      selected++;
+    });
+  }
+
+  void _buttonCart() async {
+    print("start");
+    if (selected != 0) {
+      var response = await http.post(Env().postCartProduct(),
+          body: jsonEncode({
+            "idCart": widget.data.id,
+            "qty": widget.data.qty
+          }),
+          headers: {"Content-Type": "application/json"});
+      final body = jsonDecode(response.body);
+      if (body["msg"] == "Item Updated") {
+        print('sukses');
+        print(body);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(body["msg"])));
+      } else {
+        print('gagal');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        // child: Consumer<Price>(
-        //   builder: (context, count, child) {
-        //     return
-        child: Consumer<Price>(
-          builder: (context, count, child) {
-            return Container(
-              margin: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
+        bottomNavigationBar: Container(
+          // child: Consumer<Price>(
+          //   builder: (context, count, child) {
+          //     return
+          child: Container(
+            margin: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
                     width: MediaQuery.of(context).size.width - 2 * 50,
-                      height: 50,
-                      child: ElevatedButton(
+                    height: 50,
+                    child: ElevatedButton(
                       onPressed: () {
                         // print (widget.data['example']);
-                        // selected = (widget.data['id']);
-                        // cartItems
-                            count.add(widget.data['example']);
-                      },style: ElevatedButton.styleFrom(primary: Colors.orange,),
+                        _buttonCart();
+                        setState(() {
+                          selected = widget.data.id;
+                        });
+
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
+                      ),
                       // color: Colors.orange,
                       // shape: RoundedRectangleBorder(
                       //     borderRadius: BorderRadius.circular(10)),
@@ -64,71 +101,74 @@ class _DescFoodState extends State<DescFood> {
                             fontSize: 20,
                             color: Colors.white),
                       ),
-                  )),
-
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(context, CustomHero(page: CobaCart(mantap: {'yuhu': widget.data['example']},
-                        )));
-                      },
-                      icon: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.orange,
-                        size: 45,
-                      ))
-                ],
-              ),
-            );
-          },
+                    )),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(context, CustomHero(page: Keranjang()));
+                    },
+                    icon: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.orange,
+                      size: 45,
+                    ))
+              ],
+            ),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child:
-          Column(children: [
+        body: SingleChildScrollView(
+          child: SafeArea(
+              child: Column(children: [
             Container(
               margin: EdgeInsets.all(10),
               height: 250,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(widget.data['example'].image),
+                      image: NetworkImage(widget.data.image),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(20)),
-                child: Stack(children:[
-                  Positioned(top:0, left: 5,
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),color: Colors.orange,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 7,
-                                  offset: Offset(0, 5),
-                                  spreadRadius: 5,
-                                  color: Colors.orange.shade200)]
-                        ),
-
-                        child: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back,color: Colors.white,)),
-                      )),
-                ]),
+              child: Stack(children: [
+                Positioned(
+                    top: 0,
+                    left: 5,
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.orange,
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 7,
+                                offset: Offset(0, 5),
+                                spreadRadius: 5,
+                                color: Colors.orange.shade200)
+                          ]),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          )),
+                    )),
+              ]),
             ),
             Container(
               child: content(
-                  widget.data['example'].name,
-                  widget.data['example'].star.toString(),
-                  widget.data['example'].image,
-                  widget.data['example'].person.toString(),
-                  widget.data['example'].desc,
-                  widget.data['example'].price.toString(),
-                  widget.data['example'].country),
+                  widget.data.name,
+                  widget.data.star.toString(),
+                  widget.data.image,
+                  widget.data.person.toString(),
+                  widget.data.desc,
+                  widget.data.price.toString(),
+                  widget.data.country),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
             ),
-
           ])),
-      ));
+        ));
   }
 }
 
@@ -166,11 +206,9 @@ Widget content(String name, String star, String image, String person,
         ]),
       ),
       Container(
-        margin: EdgeInsets.only(top:20),
+        margin: EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
-          color: Colors.orange[300],
-          borderRadius: BorderRadius.circular(10)
-        ),
+            color: Colors.orange[300], borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: EdgeInsets.all(10),
           child: Text(
@@ -261,11 +299,9 @@ Widget content(String name, String star, String image, String person,
         ]),
       ),
       Container(
-        margin: EdgeInsets.only(top:20),
+        margin: EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
-            color: Colors.orange[300],
-            borderRadius: BorderRadius.circular(10)
-        ),
+            color: Colors.orange[300], borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: EdgeInsets.all(10),
           child: Text(

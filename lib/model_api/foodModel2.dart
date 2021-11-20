@@ -8,6 +8,16 @@ List<FoodModel> foodModelFromJson(String str) => List<FoodModel>.from(json.decod
 
 String foodModelToJson(List<FoodModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+class FoodItem{
+
+  static List<FoodModel> foody = [];
+
+  FoodModel getById(int id) =>
+      foody.firstWhere((element) => element.id == id, orElse: null);
+
+  // Get Item by position
+  FoodModel getByPosition(int pos) => foody[pos];
+}
 class FoodModel {
   FoodModel({
     required this.id,
