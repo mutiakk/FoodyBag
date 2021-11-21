@@ -21,7 +21,7 @@ class ListProduct extends StatefulWidget {
 
 class _ListProductState extends State<ListProduct> {
   bool _loading = true;
-
+  var foody= <FoodModel>[];
   @override
   void initState() {
     super.initState();
@@ -33,17 +33,17 @@ class _ListProductState extends State<ListProduct> {
   //   setState(() {});
   // }
 
-  getDataList() async {
+  Future getDataList() async {
       final response = await http.get(Env().getListProduct());
       if (response.statusCode == 200) {
         setState(() {
           _loading = false;
+          Iterable it = jsonDecode(response.body);
+          print(response.body);
+          foody = it.map((e) => FoodModel.fromJson(e)).toList();
         });
-        Iterable it = jsonDecode(response.body);
-        print(response.body);
-        FoodItem.foody = it.map((e) => FoodModel.fromJson(e)).toList();
         // List<FoodModel> food = it.map((e) => FoodModel.fromJson(e)).toList();
-        return FoodItem.foody;
+        return foody;
       }
   }
 
@@ -67,14 +67,13 @@ class _ListProductState extends State<ListProduct> {
                         topLeft: Radius.circular(30))),
                 child: ListView.separated(
                     itemBuilder: (context, i) {
-                      final data= FoodItem.foody[i];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                               context,
                               CustomHero(
                                   page: DescFood(
-                                data : data,
+                                    data: {'example': foody[i]},
                               )));
                         },
                         child: Container(
@@ -91,15 +90,15 @@ class _ListProductState extends State<ListProduct> {
                             ],
                           ),
                           width: MediaQuery.of(context).size.width,
-                          child: imageFood(FoodItem.foody[i].name,
-                              FoodItem.foody[i].price.toString(), FoodItem.foody[i].image),
+                          child: imageFood(foody[i].name,
+                              foody[i].price.toString(), foody[i].image),
                         ),
                       );
                     },
                     separatorBuilder: (context, i) {
                       return Divider();
                     },
-                    itemCount: FoodItem.foody.length)));
+                    itemCount: foody.length)));
   }
 }
 

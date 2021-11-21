@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
           'login': body['user']["login"],
         };
         await prefs.setString("login", jsonEncode(user));
+        await prefs.setString("user", body["token"]);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body["msg"])));
         //awaitW prefs.setStringList("login", body['user'].toJson());
@@ -74,27 +75,8 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Blank Value')));
     }
-
-// if (emailControl.text.isNotEmpty && passControl.text.isNotEmpty) {
-    //   SharedPreferences prefs= await SharedPreferences.getInstance();
-    //   prefs.setBool('isUser', true);
-    //
-    //   Future.delayed(Duration(seconds: 2));
-    //   if (emailControl.text == 'mancuy' && passControl.text == 'mancuy') {
-    //     Navigator.pushReplacement(
-    //         context, MaterialPageRoute(builder: (context) => HomePage()));
-    //   }
-    // }
   }
 
-  // void checkLogin() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? value = prefs.getString("login");
-  //   if (value != null) {
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //         MaterialPageRoute(builder: (context) => MyHome()), (route) => false);
-  //   }
-  // }
 
   void _loadDialog(String text) {
     showDialog(

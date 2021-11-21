@@ -17,6 +17,7 @@ class Keranjang extends StatefulWidget {
 class _KeranjangState extends State<Keranjang> {
   //List<CartFood> cart = [];
   bool _loading = true;
+  var cart= <CartFood>[];
 
   @override
   void initState() {
@@ -24,16 +25,16 @@ class _KeranjangState extends State<Keranjang> {
     getDataList();
   }
 
-  getDataList() async {
+  Future getDataList() async {
     final response = await http.get(Env().getCartProduct());
     if (response.statusCode == 200) {
       setState(() {
         _loading = false;
+        Iterable it = jsonDecode(response.body);
+        print(response.body);
+        cart= it.map((e) => CartFood.fromJson(e)).toList();
       });
-      Iterable it = jsonDecode(response.body);
-      print(response.body);
-      CartItem.cart = it.map((e) => CartFood.fromJson(e)).toList();
-      return CartItem.cart;
+      return cart;
     }
   }
 
@@ -54,9 +55,8 @@ class _KeranjangState extends State<Keranjang> {
       ),
       body: Center(
           child: ListView.builder(
-              itemCount: CartItem.cart.length,
+              itemCount: cart.length,
               itemBuilder: (context, index) {
-                final cart = CartItem.cart[index];
                 return Container(
                   width: MediaQuery
                       .of(context)
@@ -92,10 +92,10 @@ class _KeranjangState extends State<Keranjang> {
                                 width: 117,
                                 height: 95,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                      image: NetworkImage(cart.image), fit: BoxFit.cover)
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                        image: NetworkImage(cart[index].image), fit: BoxFit.cover)
                                 ),
                               ),
                             ),
@@ -110,7 +110,7 @@ class _KeranjangState extends State<Keranjang> {
                                       margin: EdgeInsets.only(bottom: 10),
                                       child: Align(
                                         child: Text(
-                                          cart.name,
+                                          cart[index].name,
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
@@ -156,7 +156,7 @@ class _KeranjangState extends State<Keranjang> {
                                                   padding:
                                                   EdgeInsets.only(left: 5),
                                                   child: Text(
-                                                    cart.qty.toString(),
+                                                    cart[index].qty.toString(),
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -180,7 +180,7 @@ class _KeranjangState extends State<Keranjang> {
                                           ),
                                           Align(
                                             child: Text(
-                                              cart.price.toString(),
+                                              cart[index].price.toString(),
                                               style: TextStyle(fontSize: 12),
                                               maxLines: 2,
                                             ),
@@ -192,7 +192,7 @@ class _KeranjangState extends State<Keranjang> {
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
-                                        (cart.price * cart.qty).toString(),
+                                        (cart[index].price * cart[index].qty).toString(),
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,

@@ -15,9 +15,10 @@ import '../api.dart';
 import 'cobacart.dart';
 
 class DescFood extends StatefulWidget {
-  //Map<String, dynamic> data;
 
-  final FoodModel data;
+  Map<String, dynamic> data;
+
+  // final FoodModel data;
 
   DescFood({Key? key, required this.data});
 
@@ -47,8 +48,8 @@ class _DescFoodState extends State<DescFood> {
     if (selected != 0) {
       var response = await http.post(Env().postCartProduct(),
           body: jsonEncode({
-            "idCart": widget.data.id,
-            "qty": widget.data.qty
+            "idCart": widget.data['example'].id,
+            "qty": widget.data['example'].qty
           }),
           headers: {"Content-Type": "application/json"});
       final body = jsonDecode(response.body);
@@ -84,7 +85,7 @@ class _DescFoodState extends State<DescFood> {
                         // print (widget.data['example']);
                         _buttonCart();
                         setState(() {
-                          selected = widget.data.id;
+                          selected = widget.data['example'].id;
                         });
 
                       },
@@ -124,7 +125,7 @@ class _DescFoodState extends State<DescFood> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(widget.data.image),
+                      image: NetworkImage(widget.data['example'].image),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(20)),
               child: Stack(children: [
@@ -157,13 +158,13 @@ class _DescFoodState extends State<DescFood> {
             ),
             Container(
               child: content(
-                  widget.data.name,
-                  widget.data.star.toString(),
-                  widget.data.image,
-                  widget.data.person.toString(),
-                  widget.data.desc,
-                  widget.data.price.toString(),
-                  widget.data.country),
+                  widget.data['example'].name,
+                  widget.data['example'].star.toString(),
+                  widget.data['example'].image,
+                  widget.data['example'].person.toString(),
+                  widget.data['example'].desc,
+                  widget.data['example'].price.toString(),
+                  widget.data['example'].country),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
             ),
