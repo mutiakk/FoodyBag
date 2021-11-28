@@ -39,7 +39,8 @@ class _RegistPageState extends State<RegistPage> {
             "username": emailControl.text,
             "password": passControl.text,
             "password_repeat": passControl2.text
-          }),headers: {"Content-Type": "application/json"});
+          }),
+          headers: {"Content-Type": "application/json"});
       if (response.statusCode == 201) {
         final body = jsonDecode(response.body);
         ScaffoldMessenger.of(context)
@@ -49,12 +50,11 @@ class _RegistPageState extends State<RegistPage> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LoginPage()),
             (route) => false);
-      } else if(response.statusCode == 400){
+      } else if (response.statusCode == 400) {
         final body = jsonDecode(response.body);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body['msg'])));
-      }
-      else {
+      } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('unsucces')));
       }
@@ -78,17 +78,18 @@ class _RegistPageState extends State<RegistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(child:Center(
-        child: Column(children: [
+        body: SingleChildScrollView(
+            child: Center(
+      child: Stack(children: [
+        Column(children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 250,
+            height: 300,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(100),
                 ),
-                color: Colors.blueAccent),
+                color: Colors.orange),
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Container(
@@ -111,7 +112,34 @@ class _RegistPageState extends State<RegistPage> {
                 child: formRegister(),
               )),
         ]),
-      ),
+        Positioned(
+            top: 10,
+            left: 10,
+            width: 35,
+            height: 35,
+            child: circle()),
+        Positioned(
+            top: 55,
+            left: 55,
+            width: 75,
+            height: 75,
+            child: circle()),
+        Positioned(
+            top: 125,
+            left: 125,
+            width: 100,
+            height: 100,
+            child: circle()),
+      ]),
+    )));
+  }
+  Widget circle() {
+    return Container(
+        height: 50,
+        width: 50,
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: CircleBorder(),
         ));
   }
 
@@ -175,7 +203,8 @@ class _RegistPageState extends State<RegistPage> {
         ),
         SizedBox(
           height: 10,
-        ),RaisedButton(
+        ),
+        RaisedButton(
           onPressed: () {
             _regist();
           },

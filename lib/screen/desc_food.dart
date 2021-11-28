@@ -83,8 +83,9 @@ class _DescFoodState extends State<DescFood> {
                     child: ElevatedButton(
                       onPressed: () {
                         // print (widget.data['example']);
-                        _buttonCart();
+
                         setState(() {
+                          _buttonCart();
                           selected = widget.data['example'].id;
                         });
 
@@ -206,109 +207,136 @@ Widget content(String name, String star, String image, String person,
           )
         ]),
       ),
-      Container(
-        margin: EdgeInsets.only(top: 20),
-        decoration: BoxDecoration(
-            color: Colors.orange[300], borderRadius: BorderRadius.circular(10)),
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'About the menu',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 3),
-          ),
+      Container (
+        margin: EdgeInsets.only(left:5, right: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+                flex: 1,
+                child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.orange
+                    ),
+                    margin: EdgeInsets.all(5),
+                child: Column(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Icon(
+                      Icons.flag,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: Text(
+                      'Country',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      country,
+                      maxLines: 2,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ]),)),
+            Flexible(
+                flex: 1,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.orange
+                  ),
+                  margin: EdgeInsets.all(5),
+                  child: Column(children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Text(
+                        'Person',
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        person,
+                        maxLines: 2,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ]),)),
+            Flexible(
+                flex: 1,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.orange
+                  ),
+                  margin: EdgeInsets.all(5),
+                  child: Column(children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Icon(
+                        Icons.star,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Text(
+                        'Rate',
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        star,
+                        maxLines: 2,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ]),)),
+          ],
         ),
       ),
       Container(
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          Column(
-            children: [
-              Container(
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    // color: Colors.orange),
-                  ),
-                  child: Column(children: [
-                    Row(children: <Widget>[
-                      Icon(
-                        Icons.flag,
-                        color: Colors.orange,
-                      ),
-                      Text(
-                        'Country',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.orange),
-                      ),
-                    ]),
-                    Container(
-                        padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Text(
-                          country,
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )),
-                  ])),
-            ],
-          ),
-          Column(
-            children: [
-              Container(
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    // color: Colors.orange),
-                  ),
-                  child: Column(children: [
-                    Row(children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: Colors.orange,
-                      ),
-                      Text(
-                        'Serving Person',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.orange),
-                      ),
-                    ]),
-                    Container(
-                        padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Text(
-                          person + " person",
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )),
-                  ])),
-            ],
-          ),
-        ]),
-      ),
-      Container(
         margin: EdgeInsets.only(top: 20),
-        decoration: BoxDecoration(
-            color: Colors.orange[300], borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: Text(
-            'Description',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 3),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Description',
+              style: TextStyle(color: Colors.orange,
+                  fontWeight: FontWeight.bold, fontSize: 24, letterSpacing: 3),
+            ),
           ),
         ),
       ),

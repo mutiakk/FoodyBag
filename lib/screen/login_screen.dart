@@ -78,72 +78,99 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  void _loadDialog(String text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => Dialog(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              new CircularProgressIndicator(),
-              new Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(text),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: SingleChildScrollView(
-          child: Column(children: [
-        Container(
-          margin: EdgeInsets.all(20),
-          padding: EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width * 0.85,
-          height: 450,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 7,
-                    offset: Offset(0, 5),
-                    spreadRadius: 5,
-                    color: Colors.blueAccent.withOpacity(0.5))
-              ]),
-          child: Form(
-            child: formSignIn(),
-          ),
-        ),
-        TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RegistPage()),
-              );
-            },
-            child: Text('Register Yok'))
-      ])),
-    ));
+        resizeToAvoidBottomInset: false,
+        body: Container(
+            child: Center(
+              child: Stack(
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Form(child: formSignIn()),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => RegistPage()),
+                                    );
+                                  },
+                                  child: Text(
+                                    "Don't have an account? Register",
+                                    style: TextStyle(color: Colors.black),
+                                  ))
+                            ],
+                          ),
+                        ),
+                        // SizedBox(height: 20,),
+                        // // Stack(
+                        // //   children: [
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 300,
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(50,10,10,10),
+                              child: Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          fontSize: 50,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
+                            ),
+
+                            decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius:
+                                BorderRadius.only(topLeft: Radius.circular(100))),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                        bottom: 10,
+                        right: 10,
+                        width: 35,
+                        height: 35,
+                        child: circle()),
+                    Positioned(
+                        bottom: 55,
+                        right: 55,
+                        width: 75,
+                        height: 75,
+                        child: circle()),
+                    Positioned(
+                        bottom: 125,
+                        right: 125,
+                        width: 100,
+                        height: 100,
+                        child: circle()),
+                  ]),
+              //formLogin(),
+            )));
   }
 
   Widget formSignIn() {
     return Column(
       children: [
-        Image(
-          image: AssetImage('asset/login.png'),
-          width: 200,
-          height: 200,
-        ),
         TextFormField(
           keyboardType: TextInputType.text,
           controller: emailControl,
@@ -179,19 +206,31 @@ class _LoginPageState extends State<LoginPage> {
               )),
         ),
         SizedBox(height: 20),
-        RaisedButton(
+        ElevatedButton(
           onPressed: () {
             _login();
           },
-          color: Colors.blueAccent,
+          //color: Colors.orange,
           child: Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                'Login',
+                'Login',style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               )),
         ),
       ],
     );
   }
+  Widget circle() {
+    return Container(
+        height: 50,
+        width: 50,
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: CircleBorder(),
+        ));
+  }
+
 }
+
+

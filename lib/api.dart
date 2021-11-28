@@ -18,4 +18,13 @@ class Env{
   Uri getCartProduct(){
     return Uri.parse(baseURL+"/api/listCart");
   }
+  Uri plusCart(){
+    return Uri.parse(baseURL+"/api/cartPlus");
+  }
+  Uri minCart(){
+    return Uri.parse(baseURL+"/api/cartmin");
+  }
+  Uri delCart(String idOrder){
+    return Uri.parse(baseURL+"/api/cart/" + idOrder);
+  }
 }

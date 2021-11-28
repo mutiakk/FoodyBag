@@ -7,17 +7,10 @@ import 'dart:convert';
 List<CartFood> cartFoodFromJson(String str) => List<CartFood>.from(json.decode(str).map((x) => CartFood.fromJson(x)));
 
 String cartFoodToJson(List<CartFood> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-class CartItem{
-  static List<CartFood> cart = [];
 
-  CartFood getById(int id) =>
-      cart.firstWhere((element) => element.id == id, orElse: null);
-
-  // Get Item by position
-  CartFood getByPosition(int pos) => cart[pos];
-}
 class CartFood {
   CartFood({
+    required this.idOrder,
     required this.idCart,
     required this.qty,
     required this.id,
@@ -26,6 +19,7 @@ class CartFood {
     required this.image,
   });
 
+  int idOrder;
   int idCart;
   int qty;
   int id;
@@ -34,6 +28,7 @@ class CartFood {
   String image;
 
   factory CartFood.fromJson(Map<String, dynamic> json) => CartFood(
+    idOrder: json["idOrder"],
     idCart: json["idCart"],
     qty: json["qty"],
     id: json["id"],
@@ -43,6 +38,7 @@ class CartFood {
   );
 
   Map<String, dynamic> toJson() => {
+    "idOrder": idOrder,
     "idCart": idCart,
     "qty": qty,
     "id": id,

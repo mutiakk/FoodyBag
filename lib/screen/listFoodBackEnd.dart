@@ -21,31 +21,27 @@ class ListProduct extends StatefulWidget {
 
 class _ListProductState extends State<ListProduct> {
   bool _loading = true;
-  var foody= <FoodModel>[];
+  var foody = <FoodModel>[];
+
   @override
   void initState() {
     super.initState();
     getDataList();
   }
 
-  // getData() async {
-  //   foody = await getDataList();
-  //   setState(() {});
-  // }
-
   Future getDataList() async {
-      final response = await http.get(Env().getListProduct());
-      if (response.statusCode == 200) {
-        setState(() {
-          _loading = false;
-          Iterable it = jsonDecode(response.body);
-          print(response.body);
-          foody = it.map((e) => FoodModel.fromJson(e)).toList();
-        });
-        // List<FoodModel> food = it.map((e) => FoodModel.fromJson(e)).toList();
-        return foody;
-      }
+    final response = await http.get(Env().getListProduct());
+    if (response.statusCode == 200) {
+      setState(() {
+        _loading = false;
+        Iterable it = jsonDecode(response.body);
+        print(response.body);
+        foody = it.map((e) => FoodModel.fromJson(e)).toList();
+      });
+      return foody;
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:cubaapi/screen/cart_page.dart';
+import 'package:cubaapi/screen/keranjang.dart';
 import 'package:cubaapi/screen/listFoodBackEnd.dart';
 import 'package:cubaapi/screen/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _SideBarAppState extends State<SideBarApp> {
               style: TextStyle(color: Colors.white, fontSize: 25),
             ),
             decoration: BoxDecoration(
-                color: Colors.grey,)),
+                color: Colors.orange,)),
           ListTile(
             leading: Icon(Icons.input),
             title: Text('Welcome'),
@@ -53,7 +54,7 @@ class _SideBarAppState extends State<SideBarApp> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartPage()),
+                MaterialPageRoute(builder: (context) => Keranjang()),
               );
             },
           ),
