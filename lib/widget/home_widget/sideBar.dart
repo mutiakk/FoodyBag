@@ -1,7 +1,7 @@
-import 'package:cubaapi/screen/cart_page.dart';
 import 'package:cubaapi/screen/keranjang.dart';
 import 'package:cubaapi/screen/listFoodBackEnd.dart';
 import 'package:cubaapi/screen/login_screen.dart';
+import 'package:cubaapi/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,15 +42,15 @@ class _SideBarAppState extends State<SideBarApp> {
               style: TextStyle(color: Colors.white, fontSize: 25),
             ),
             decoration: BoxDecoration(
-                color: Colors.orange,)),
+                color: ThemeColor.primOrange,)),
           ListTile(
             leading: Icon(Icons.input),
-            title: Text('Welcome'),
+            title: Text('Home'),
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
             leading: Icon(Icons.shopping_cart),
-            title: Text('Cart'),
+            title: Text('My Cart'),
             onTap: () {
               Navigator.push(
                 context,
@@ -70,15 +70,6 @@ class _SideBarAppState extends State<SideBarApp> {
                       (route) => false);
             },
           ),
-          ListTile(
-            title: Text('COBA'),
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ListProduct()),
-              );
-            },
-          )
         ],
       ),)
       ),

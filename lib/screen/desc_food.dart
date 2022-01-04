@@ -1,21 +1,17 @@
 import 'dart:convert';
 
 import 'package:cubaapi/model_api/foodModel2.dart';
-import 'package:cubaapi/model_api/food_calculate.dart';
-import 'package:cubaapi/model_api/food_cart.dart';
-import 'package:cubaapi/screen/cart_page.dart';
 import 'package:cubaapi/screen/keranjang.dart';
+import 'package:cubaapi/theme/colors.dart';
+import 'package:cubaapi/theme/fonts.dart';
 import 'package:cubaapi/widget/CustomPageHero.dart';
-import 'package:cubaapi/widget/desc_widget/appBarDesc.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api.dart';
-import 'cobacart.dart';
+import '../model_api/api.dart';
 
 class DescFood extends StatefulWidget {
-
   Map<String, dynamic> data;
 
   // final FoodModel data;
@@ -43,17 +39,24 @@ class _DescFoodState extends State<DescFood> {
     });
   }
 
-  void _buttonCart() async {
+  void _buttonCart(int id, int qty) async {
     print("start");
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String idUser = pref.getString("user")!;
+    print(idUser);
     if (selected != 0) {
       var response = await http.post(Env().postCartProduct(),
           body: jsonEncode({
-            "idCart": widget.data['example'].id,
-            "qty": widget.data['example'].qty
+            "idCart": id,
+            "qty": qty,
+            "user": idUser,
           }),
           headers: {"Content-Type": "application/json"});
       final body = jsonDecode(response.body);
-      if (body["msg"] == "Item Updated") {
+      if (body["msg"] == "Item Added") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(body["msg"])));
+      } else if (body["msg"] == "Item Updated") {
         print('sukses');
         print(body);
         ScaffoldMessenger.of(context)
@@ -85,15 +88,15 @@ class _DescFoodState extends State<DescFood> {
                         // print (widget.data['example']);
 
                         setState(() {
-                          _buttonCart();
+                          _buttonCart(widget.data['example'].id,
+                              widget.data['example'].qty);
                           selected = widget.data['example'].id;
                         });
-
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.orange,
+                        primary: ThemeColor.primOrange,
                       ),
-                      // color: Colors.orange,
+                      // color: ThemeColor.primOrange,
                       // shape: RoundedRectangleBorder(
                       //     borderRadius: BorderRadius.circular(10)),
                       child: Text(
@@ -110,7 +113,7 @@ class _DescFoodState extends State<DescFood> {
                     },
                     icon: Icon(
                       Icons.shopping_cart,
-                      color: Colors.orange,
+                      color: ThemeColor.primOrange,
                       size: 45,
                     ))
               ],
@@ -138,13 +141,13 @@ class _DescFoodState extends State<DescFood> {
                       width: 50,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          color: Colors.orange,
+                          color: ThemeColor.primOrange,
                           boxShadow: [
                             BoxShadow(
                                 blurRadius: 7,
                                 offset: Offset(0, 5),
                                 spreadRadius: 5,
-                                color: Colors.orange.shade200)
+                                color: ThemeColor.primOrange)
                           ]),
                       child: IconButton(
                           onPressed: () {
@@ -172,186 +175,179 @@ class _DescFoodState extends State<DescFood> {
           ])),
         ));
   }
-}
 
-Widget content(String name, String star, String image, String person,
-    String desc, String price, String country) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: <Widget>[
-      Container(
-        margin: EdgeInsets.all(15),
-        child: Column(children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-              ),
-              maxLines: 2,
+  Widget content(String name, String star, String image, String person,
+      String desc, String price, String country) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(15),
+          child: Column(children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(name,
+                  style: ThemeFonts.textStyle500.copyWith(
+                    fontSize: 40,
+                  ),
+                  maxLines: 2),
             ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'Rp. ' + price,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
-                fontSize: 25,
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Rp. ' + price,
+                style: ThemeFonts.textStyle200,
+                maxLines: 2,
               ),
-              maxLines: 2,
-            ),
-          )
-        ]),
-      ),
-      Container (
-        margin: EdgeInsets.only(left:5, right: 5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Flexible(
-                flex: 1,
-                child: Container(
+            )
+          ]),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 5, right: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Flexible(
+                  flex: 1,
+                  child: Container(
                     height: 100,
                     width: 100,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.orange
-                    ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: ThemeColor.primOrange),
                     margin: EdgeInsets.all(5),
-                child: Column(children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Icon(
-                      Icons.flag,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    child: Text(
-                      'Country',
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      country,
-                      maxLines: 2,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ]),)),
-            Flexible(
-                flex: 1,
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.orange
-                  ),
-                  margin: EdgeInsets.all(5),
-                  child: Column(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
+                    child: Column(children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.flag,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        'Person',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          'Country',
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        person,
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          country,
+                          maxLines: 2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                  )),
+              Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: ThemeColor.primOrange),
+                    margin: EdgeInsets.all(5),
+                    child: Column(children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
                       ),
-                    )
-                  ]),)),
-            Flexible(
-                flex: 1,
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.orange
-                  ),
-                  margin: EdgeInsets.all(5),
-                  child: Column(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Icon(
-                        Icons.star,
-                        color: Colors.white,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          'Person',
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        'Rate',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          person,
+                          maxLines: 2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                  )),
+              Flexible(
+                  flex: 1,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: ThemeColor.primOrange),
+                    margin: EdgeInsets.all(5),
+                    child: Column(children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.star,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        star,
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          'Rate',
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    )
-                  ]),)),
-          ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          star,
+                          maxLines: 2,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                  )),
+            ],
+          ),
         ),
-      ),
-      Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              'Description',
-              style: TextStyle(color: Colors.orange,
-                  fontWeight: FontWeight.bold, fontSize: 24, letterSpacing: 3),
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Description',
+                style: TextStyle(
+                    color: ThemeColor.primOrange,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    letterSpacing: 3),
+              ),
             ),
           ),
         ),
-      ),
-      Container(
-        padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
-        margin: EdgeInsets.all(5),
-        child: Text(
-          desc,
-          style: TextStyle(
-            wordSpacing: 4,
-            fontSize: 16,
+        Container(
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+          margin: EdgeInsets.all(5),
+          child: Text(
+            desc,
+            style: TextStyle(
+              wordSpacing: 4,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.justify,
           ),
-          textAlign: TextAlign.justify,
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }

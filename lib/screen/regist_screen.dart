@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:cubaapi/screen/login_screen.dart';
+import 'package:cubaapi/theme/colors.dart';
+import 'package:cubaapi/theme/fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api.dart';
+import '../model_api/api.dart';
 
 class RegistPage extends StatefulWidget {
   const RegistPage({Key? key}) : super(key: key);
@@ -22,6 +24,8 @@ class _RegistPageState extends State<RegistPage> {
   final emailControl = TextEditingController();
   final passControl = TextEditingController();
   final passControl2 = TextEditingController();
+  final fullName = TextEditingController();
+  final address = TextEditingController();
 
   void _password() {
     setState(() {
@@ -38,7 +42,9 @@ class _RegistPageState extends State<RegistPage> {
           body: jsonEncode({
             "username": emailControl.text,
             "password": passControl.text,
-            "password_repeat": passControl2.text
+            "password_repeat": passControl2.text,
+            "fullname": fullName.text,
+            "address": address.text
           }),
           headers: {"Content-Type": "application/json"});
       if (response.statusCode == 201) {
@@ -47,9 +53,6 @@ class _RegistPageState extends State<RegistPage> {
             .showSnackBar(SnackBar(content: Text('Register Success')));
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("register", body['message']);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginPage()),
-            (route) => false);
       } else if (response.statusCode == 400) {
         final body = jsonDecode(response.body);
         ScaffoldMessenger.of(context)
@@ -89,19 +92,15 @@ class _RegistPageState extends State<RegistPage> {
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(100),
                 ),
-                color: Colors.orange),
+                color: ThemeColor.primOrange),
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10,40,0,0),
               child: Container(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
+                  //alignment: Alignment.bottomRight,
+                  child: Align(alignment: Alignment.bottomRight,
+                    child:Text(
                       'Register',
-                      style: TextStyle(
-                          fontSize: 50,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                      style: ThemeFonts.textStyle400,
                     ),
                   )),
             ),
@@ -112,27 +111,14 @@ class _RegistPageState extends State<RegistPage> {
                 child: formRegister(),
               )),
         ]),
+        Positioned(top: 10, left: 10, width: 35, height: 35, child: circle()),
+        Positioned(top: 55, left: 55, width: 75, height: 75, child: circle()),
         Positioned(
-            top: 10,
-            left: 10,
-            width: 35,
-            height: 35,
-            child: circle()),
-        Positioned(
-            top: 55,
-            left: 55,
-            width: 75,
-            height: 75,
-            child: circle()),
-        Positioned(
-            top: 125,
-            left: 125,
-            width: 100,
-            height: 100,
-            child: circle()),
+            top: 125, left: 125, width: 100, height: 100, child: circle()),
       ]),
     )));
   }
+
   Widget circle() {
     return Container(
         height: 50,
@@ -148,14 +134,36 @@ class _RegistPageState extends State<RegistPage> {
       children: [
         TextFormField(
           keyboardType: TextInputType.text,
-          controller: emailControl,
+          controller: fullName,
           decoration: InputDecoration(
-            labelText: 'Name',
+            labelText: 'Full Name',
             icon: Icon(Icons.person),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(color: Colors.lightGreen, width: 2)),
+                borderSide: BorderSide(color: Colors.grey, width: 2)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
+          autofocus: true,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          keyboardType: TextInputType.text,
+          controller: emailControl,
+          decoration: InputDecoration(
+            labelText: 'Username',
+            icon: Icon(Icons.alternate_email),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.grey, width: 2)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
+          ),
+          autofocus: true,
         ),
         SizedBox(
           height: 10,
@@ -165,50 +173,76 @@ class _RegistPageState extends State<RegistPage> {
           obscureText: _passHide,
           controller: passControl,
           decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
+            labelText: 'Password',
+            icon: Icon(Icons.lock),
+            suffixIcon: GestureDetector(
+              child: Icon(
+                _passHide ? Icons.visibility_off : Icons.visibility,
+                color: _passHide ? Colors.grey : ThemeColor.primOrange,
               ),
-              labelText: 'Password',
-              icon: Icon(Icons.lock),
-              suffixIcon: GestureDetector(
-                child: Icon(
-                  _passHide ? Icons.visibility_off : Icons.visibility,
-                  color: _passHide ? Colors.grey : Colors.blueAccent,
-                ),
-                onTap: () {
-                  _password();
-                },
-              )),
+              onTap: () {
+                _password();
+              },
+            ),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.grey, width: 2)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
+          ),
+          autofocus: true,
         ),
         SizedBox(height: 10),
         TextFormField(
           keyboardType: TextInputType.text,
-          obscureText: _passHide,
           controller: passControl2,
+          obscureText: _passHide,
           decoration: InputDecoration(
-              border: OutlineInputBorder(
+            labelText: 'Repeat Password',
+            icon: Icon(Icons.lock),
+            border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-              ),
-              labelText: 'Password',
-              icon: Icon(Icons.lock),
-              suffixIcon: GestureDetector(
-                child: Icon(
-                  _passHide ? Icons.visibility_off : Icons.visibility,
-                  color: _passHide ? Colors.grey : Colors.blueAccent,
-                ),
-                onTap: () {
-                  _password();
-                },
-              )),
+                borderSide: BorderSide(color: Colors.grey, width: 2)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
+          ),
+          autofocus: true,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          keyboardType: TextInputType.text,
+          controller: address,
+          decoration: InputDecoration(
+            labelText: 'Address',
+            icon: Icon(Icons.home_filled),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.grey, width: 2)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
+          ),
+          autofocus: true,
         ),
         SizedBox(
           height: 10,
         ),
         RaisedButton(
+          color: ThemeColor.primOrange,
           onPressed: () {
             _regist();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => LoginPage()),
+                (route) => false);
           },
-          child: Text("Register"),
+          child: Text(
+            "Register",
+            style: TextStyle(color: Colors.white),
+          ),
         )
       ],
     );

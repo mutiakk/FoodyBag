@@ -1,16 +1,9 @@
-import 'package:cubaapi/screen/login_screen.dart';
 import 'package:cubaapi/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'model_api/food_calculate.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => Price())],
-      child: MyApp(),
-    ),
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FoodyBag',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+          primarySwatch: Colors.orange,
+          visualDensity: VisualDensity.adaptivePlatformDensity
       ),
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cubaapi/screen/login_screen.dart';
+import 'package:cubaapi/theme/colors.dart';
+import 'package:cubaapi/theme/fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -19,6 +21,19 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String? user;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getLogin().whenComplete(() async{Timer(Duration(seconds: 3),
+  //           ()=> Navigator.pushReplacement(context,
+  //           MaterialPageRoute(builder:
+  //               (context) =>
+  //               (user?.isEmpty??true ? LoginPage():MyHome())
+  //           )
+  //       ));
+  //   });
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -31,8 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
         ));
     });
   }
-
   Future getLogin()async{
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     // String? value = prefs.getString("login");
     String? loginPrefs=prefs.getString("user");
@@ -41,7 +56,6 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     print (user);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +102,7 @@ Widget centerObject() {
         width: 250,
         height: 250,
         decoration: BoxDecoration(
-            // color: Colors.yellow
+          // color: Colors.yellow
             image: DecorationImage(
                 image: AssetImage(
                   'asset/food.png',
@@ -97,8 +111,8 @@ Widget centerObject() {
       ),
       Text(
         "FoodyBag",
-        style: TextStyle(
-            fontSize: 30, fontWeight: FontWeight.bold, color: Colors.orange),
+        style: ThemeFonts.textStyle600
+            .copyWith(fontSize: 30, color: ThemeColor.primOrange),
       ),
       Container(
           padding: EdgeInsets.only(top: 10),
@@ -117,7 +131,10 @@ Widget circle() {
       height: 50,
       width: 50,
       decoration: ShapeDecoration(
-        color: Colors.orange,
+        color: ThemeColor.primOrange,
         shape: CircleBorder(),
       ));
 }
+
+
+
