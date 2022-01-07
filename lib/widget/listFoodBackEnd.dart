@@ -1,7 +1,5 @@
 import 'dart:convert';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cubaapi/model_api/foodModel2.dart';
+import 'package:cubaapi/model_api/food_model.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:cubaapi/theme/fonts.dart';
 import 'package:cubaapi/widget/CustomPageHero.dart';
@@ -13,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:loading_indicator/loading_indicator.dart';
 
 import '../model_api/api.dart';
-import 'desc_food.dart';
+import '../screen/desc_food.dart';
 
 class ListProduct extends StatefulWidget {
   const ListProduct({Key? key}) : super(key: key);
@@ -139,12 +137,16 @@ class _ListProductState extends State<ListProduct> {
                       topLeft: Radius.circular(8.0),
                       topRight: Radius.circular(8.0),
                     ),
-                    child: CachedNetworkImage(
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        imageUrl: image,
-                        height: 200,
-                        fit: BoxFit.fitWidth),
+                    child: Container(
+                      width: 100,
+                      height: 200,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              image: NetworkImage(image),
+                              fit: BoxFit.cover)),
+                    ),
                   ),
                   ListTile(
                     title: Text(

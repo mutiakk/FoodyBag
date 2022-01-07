@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:cubaapi/model_api/foodModel2.dart';
-import 'package:cubaapi/screen/keranjang.dart';
+import 'package:cubaapi/model_api/food_model.dart';
+import 'package:cubaapi/screen/cart_screen.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:cubaapi/theme/fonts.dart';
 import 'package:cubaapi/widget/CustomPageHero.dart';
@@ -71,9 +71,6 @@ class _DescFoodState extends State<DescFood> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: Container(
-          // child: Consumer<Price>(
-          //   builder: (context, count, child) {
-          //     return
           child: Container(
             margin: EdgeInsets.all(10),
             child: Row(
@@ -96,10 +93,7 @@ class _DescFoodState extends State<DescFood> {
                       style: ElevatedButton.styleFrom(
                         primary: ThemeColor.primOrange,
                       ),
-                      // color: ThemeColor.primOrange,
-                      // shape: RoundedRectangleBorder(
-                      //     borderRadius: BorderRadius.circular(10)),
-                      child: Text(
+                     child: Text(
                         'Add To Cart',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,

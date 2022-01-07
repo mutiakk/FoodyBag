@@ -21,19 +21,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String? user;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getLogin().whenComplete(() async{Timer(Duration(seconds: 3),
-  //           ()=> Navigator.pushReplacement(context,
-  //           MaterialPageRoute(builder:
-  //               (context) =>
-  //               (user?.isEmpty??true ? LoginPage():MyHome())
-  //           )
-  //       ));
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // String? value = prefs.getString("login");
     String? loginPrefs=prefs.getString("user");
     setState(() {
-      user= loginPrefs!;
+      user= loginPrefs;
     });
     print (user);
   }

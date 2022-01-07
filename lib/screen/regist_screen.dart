@@ -53,7 +53,10 @@ class _RegistPageState extends State<RegistPage> {
             .showSnackBar(SnackBar(content: Text('Register Success')));
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("register", body['message']);
-      } else if (response.statusCode == 400) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginPage()),
+                (route) => false);
+      } else if (response.statusCode == 409) {
         final body = jsonDecode(response.body);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body['msg'])));
@@ -235,9 +238,6 @@ class _RegistPageState extends State<RegistPage> {
           color: ThemeColor.primOrange,
           onPressed: () {
             _regist();
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => LoginPage()),
-                (route) => false);
           },
           child: Text(
             "Register",

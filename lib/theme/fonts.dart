@@ -38,4 +38,10 @@ class ThemeFonts {
       fontSize: defaultFontSize,
       fontWeight: FontWeight.w500,
       color: ThemeColor.primaryTextColor);
+
+  static TextStyle tPrice = GoogleFonts.anton(
+      fontSize: defaultFontSize,
+      fontWeight: FontWeight.w500,
+      color: ThemeColor.primOrange,
+  );
 }

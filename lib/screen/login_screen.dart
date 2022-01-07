@@ -130,7 +130,6 @@ class _LoginPageState extends State<LoginPage> {
           controller: emailControl,
           decoration: InputDecoration(
             labelText: 'Name',
-            //labelStyle: TextStyle(color: ThemeColor.primOrange),
             icon: Icon(Icons.person),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -139,7 +138,6 @@ class _LoginPageState extends State<LoginPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(
           height: 20,

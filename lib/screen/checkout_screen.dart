@@ -22,15 +22,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   List<CartFood> cart = [];
   String? selectedValue;
   List category = [];
+  String setId = "";
+  String? holder;
+  String? getId;
 
   String getRandString() {
     var random = Random.secure();
-    int len=10;
+    int len = 10;
     var values = List<int>.generate(len, (i) => random.nextInt(25));
     return base64UrlEncode(values);
   }
 
-  String? holder;
+  void settingId() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString("idPayment", getRandString());
+    print(getRandString());
+  }
+
+  void getingId() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      getId = pref.getString("idPayment")!;
+    });
+    print(getId);
+  }
 
   int? prices(int price, int qty) {
     return price * qty;
@@ -45,7 +60,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   int cartId() {
-    int id=0;
+    int id = 0;
     cart.forEach((item) {
       id = item.idOrder;
       print(id);
@@ -53,7 +68,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return id;
   }
 
-  void getDropDownItem(){
+  void getDropDownItem() {
     setState(() {
       holder = selectedValue!;
     });
@@ -66,6 +81,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     getDataList();
     getPayment();
     postPayment();
+    settingId();
+    getingId();
   }
 
   void validatePayment(context) {
@@ -73,14 +90,105 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
+              elevation: 24,
+              title: Text(
+                  "Are you sure to pay " +
+                      cartTotalPrice().toString() +
+                      " via " +
+                      holder!,
+                  maxLines: 2,
+                  style: ThemeFonts.textStyle600.copyWith(fontSize: 18),
+                  textAlign: TextAlign.left),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  //Text(),
+                  Text(
+                    "Send to 085780196976 and Add notes with your Payment ID.",
+                    style: ThemeFonts.textStyle200
+                        .copyWith(fontSize: 12, color: ThemeColor.black),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("your ID is " ,style: ThemeFonts.textStyle200
+                          .copyWith(fontSize: 12, color: ThemeColor.black),
+                      ),
+                      Text(getId!,style: ThemeFonts.textStyle200
+                          .copyWith(fontSize: 12, color: ThemeColor.orange,fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Color(0xffE5E5E5)),
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: Text("Cancel", style: TextStyle(color: Colors.black)),
+                ),
+                TextButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: ThemeColor.primOrange),
+                    onPressed: () {
+                      setState(() {
+                        if (cartTotalPrice() == null) {
+                          return null;
+                        } else {
+                          setState(() {
+                            postPayment();
+                            postHistory();
+                          });
+                          int count = 0;
+                          Navigator.popUntil(context, (route) {
+                            return count++ == 2;
+                          });
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => PaymentScreen()),
+                          );
+                        }
+                      });
+                    },
+                    child: const Text('OK',
+                        style: TextStyle(
+                            fontFamily: "NunitoSans", color: Colors.white)))
+              ],
+            ));
+  }
+
+  void noPayment(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
           elevation: 24,
-          title: Text("Payment",
-              textAlign: TextAlign.left, style: ThemeFonts.textStyle600),
-          content:
-          Column(
+          title: Text(
+              "Choose Payment Method ",
+              maxLines: 2,
+              style: ThemeFonts.textStyle600.copyWith(fontSize: 18),
+              textAlign: TextAlign.left),
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Are you sure to pay " + cartTotalPrice().toString()+ " via " + holder!,maxLines: 3,style: ThemeFonts.textStyle200.copyWith(fontSize: 14),),
+              //Text(),
+              Text(
+                "Send to 085780196976 and Add notes with your Payment ID.",
+                style: ThemeFonts.textStyle200
+                    .copyWith(fontSize: 12, color: ThemeColor.black),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("your ID is " ,style: ThemeFonts.textStyle200
+                      .copyWith(fontSize: 12, color: ThemeColor.black),
+                  ),
+                  Text(getId!,style: ThemeFonts.textStyle200
+                      .copyWith(fontSize: 12, color: ThemeColor.orange,fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ],
           ),
           actions: <Widget>[
@@ -88,16 +196,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               style:
               TextButton.styleFrom(backgroundColor: Color(0xffE5E5E5)),
               onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: Text("Batal", style: TextStyle(color: Colors.black)),
+              child: Text("Cancel", style: TextStyle(color: Colors.black)),
             ),
             TextButton(
                 style: TextButton.styleFrom(
                     backgroundColor: ThemeColor.primOrange),
                 onPressed: () {
                   setState(() {
-                    if (cartTotalPrice()==null) {
+                    if (cartTotalPrice() == null) {
                       return null;
-                    }else {
+                    } else {
                       setState(() {
                         postPayment();
                         postHistory();
@@ -119,23 +227,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ],
         ));
   }
-
-  Future postPayment()async{
+  Future postPayment() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String idUser = pref.getString("user")!;
     var response = await http.post(Env().postPayment(),
-        body: jsonEncode({
-          "price": cartTotalPrice(),
-          "payment": holder,
-          "user": idUser
-        }),
+        body: jsonEncode(
+            {"price": cartTotalPrice(), "payment": holder, "user": idUser}),
         headers: {"Content-Type": "application/json"});
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
-      print(body["msg"]);}
+      print(body["msg"]);
+    }
   }
 
-  Future postHistory()async{
+  Future postHistory() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String idUser = pref.getString("user")!;
     var response = await http.post(Env().postPaymentHistory(),
@@ -145,7 +250,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         headers: {"Content-Type": "application/json"});
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
-      print(body["msg"]);}
+      print(body["msg"]);
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      await pref.setString("pay", body["msg"]);
+    }
   }
 
   Future getPayment() async {
@@ -189,8 +297,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: RaisedButton(
             child: Text("PAY"),
             onPressed: () {
-              if (selectedValue!=null) {
+              if (selectedValue != null) {
                 getDropDownItem();
+                print(getId);
                 setState(() {
                   validatePayment(context);
                 });
@@ -213,10 +322,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: <Widget>[
               check(),
               list(),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text("Total", style: ThemeFonts.textStyle600),
                 Text(
-                  cartTotalPrice().toString(),
+                  "Rp " + cartTotalPrice().toString(),
                   style: ThemeFonts.textStyle300,
                 )
               ]),
@@ -246,10 +355,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         children: [
           Text(
             qty.toString(),
-            style: ThemeFonts.textItem,
+            style: ThemeFonts.textItem.copyWith(fontSize: 16),
           ),
-          Text(name, style: ThemeFonts.textItem),
-          Text(prices(price, qty).toString(), style: ThemeFonts.textItem),
+          Text(name, style: ThemeFonts.textItem.copyWith(fontSize: 16)),
+          Text("Rp " + prices(price, qty).toString(),
+              style: ThemeFonts.textItem.copyWith(fontSize: 16)),
         ],
       ),
     );
@@ -259,17 +369,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Container(
         margin: EdgeInsets.fromLTRB(0, 20, 0, 5),
         decoration: BoxDecoration(
-          color: Colors.blue,
             border:
                 Border(bottom: BorderSide(width: 5, color: ThemeColor.orange))),
-        child: Column(mainAxisSize:MainAxisSize.min,children: [
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(
             Icons.check_circle_outline_outlined,
             color: ThemeColor.orange,
             size: 75,
           ),
           Text(
-            "Inv.  " + getRandString(),
+            "Inv.  " + getId!,
             style: ThemeFonts.textItem.copyWith(fontSize: 18),
           ),
         ]));
@@ -279,7 +388,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Expanded(
       flex: 1,
       child: Container(
-        color: ThemeColor.red,
         height: MediaQuery.of(context).size.width,
         child: ListView.builder(
           shrinkWrap: true,

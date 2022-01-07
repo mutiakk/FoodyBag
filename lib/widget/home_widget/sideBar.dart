@@ -1,5 +1,5 @@
-import 'package:cubaapi/screen/keranjang.dart';
-import 'package:cubaapi/screen/listFoodBackEnd.dart';
+import 'package:cubaapi/screen/history_screen.dart';
+import 'package:cubaapi/screen/cart_screen.dart';
 import 'package:cubaapi/screen/login_screen.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +55,16 @@ class _SideBarAppState extends State<SideBarApp> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Keranjang()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.watch_later_outlined),
+            title: Text('History'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HistoryPage()),
               );
             },
           ),

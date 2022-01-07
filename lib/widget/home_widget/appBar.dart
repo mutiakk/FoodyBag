@@ -1,6 +1,3 @@
-
-
-import 'package:cubaapi/screen/user_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppBarHome extends StatelessWidget {
@@ -25,8 +22,8 @@ class AppBarHome extends StatelessWidget {
                     )),
                 IconButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => UserPage()));
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => UserPage()));
                     },
                     icon: Icon(
                       Icons.account_circle,

@@ -31,6 +31,9 @@ class Env{
   Uri postPayment(){
     return(Uri.parse(baseURL+"/api/payment-fix"));
   }
+  Uri getListPayment(String idUser){
+    return(Uri.parse(baseURL+"/api/payment-list/"+idUser));
+  }
   Uri postPaymentHistory(){
     return(Uri.parse(baseURL+"/api/payment-history"));
   }

@@ -1,183 +1,7 @@
-// import 'package:cubaapi/model_api/checkout_model.dart';
-// import 'package:cubaapi/model_api/hintPay_model.dart';
-// import 'package:cubaapi/model_api/payment_model.dart';
-// import 'package:flutter/material.dart';
-//
-// class PaymentScreen extends StatefulWidget {
-//   const PaymentScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   _PaymentScreenState createState() => _PaymentScreenState();
-// }
-//
-// class _PaymentScreenState extends State<PaymentScreen> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         iconTheme: IconThemeData(color: Color(0xFF6991C7)),
-//         centerTitle: true,
-//         backgroundColor: Colors.white,
-//         title: Text(
-//           'Payment',
-//           style: TextStyle(
-//               fontFamily: "Gotik",
-//               fontSize: 18.0,
-//               color: Colors.black54,
-//               fontWeight: FontWeight.w700),
-//         ),
-//         elevation: 0.0,
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(24.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Text(
-//               'Congratulations!',
-//               style: TextStyle(
-//                 fontSize: 24.0,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//             Text(
-//               '1 Langkah lagi pesanan anda akan di proses, mohon lakukan transfer',
-//               textAlign: TextAlign.center,
-//             ),
-//             SizedBox(height: 16.0),
-//             Card(
-//               child: Padding(
-//                 padding: const EdgeInsets.all(24.0),
-//                 child: Column(
-//                   children: [
-//                     Text("",
-//                       style: TextStyle(
-//                         fontSize: 16.0,
-//                       ),
-//                     ),
-//             //         const SizedBox(height: 16.0),
-//             //         Container(
-//             //           alignment: Alignment.center,
-//             //           padding: const EdgeInsets.symmetric(horizontal: 8),
-//             //           decoration: BoxDecoration(
-//             //             border: Border.all(
-//             //               width: 1,
-//             //               color: Colors.grey,
-//             //             ),
-//             //           ),
-//             //           child: Row(
-//             //             children: [
-//             //               Expanded(
-//             //                 child: Text(""
-//             //                   ),
-//             //                 ),
-//             //               IconButton(
-//             //                 iconSize: 18,
-//             //                 onPressed: () {
-//             //                   ScaffoldMessenger.of(context).showSnackBar(
-//             //                     SnackBar(
-//             //                       content:
-//             //                       Text('Kode Virtual Akun sudah di salin'),
-//             //                     ),
-//             //                   );
-//             //                 },
-//             //                 icon: Icon(Icons.document_scanner),
-//             //               )
-//             //             ],
-//             //           ),
-//             //         ),
-//             //         const SizedBox(height: 9.0),
-//             //         Text('Biaya Admin'),
-//             //         Text(
-//             //           bank.admin.toString(),
-//             //           style: TextStyle(
-//             //             fontWeight: FontWeight.bold,
-//             //             fontSize: 16.0,
-//             //           ),
-//             //         ),
-//             //         const SizedBox(height: 16.0),
-//             //         Text('Total'),
-//             //         Text(
-//             //           'Rp ' + data.transactionAmount.format(),
-//             //           style: TextStyle(
-//             //             fontSize: 24.0,
-//             //             fontWeight: FontWeight.bold,
-//             //           ),
-//             //         ),
-//             //         const Divider(),
-//             //         Text('Sebelum'),
-//             //         Text(data.expiredDate.format()),
-//             //       ],
-//             //     ),
-//             //   ),
-//             // ),
-//             const SizedBox(height: 16.0),
-//             Card(
-//               child: Padding(
-//                 padding: EdgeInsets.all(24),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text("Hint Payment"),
-//                     const SizedBox(height: 10.0),
-//                     //HintPayment(bank: bank),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     )])));
-//   }
-// }
-//
-// class HintPayment extends StatelessWidget {
-//   @required
-//   final PaymentMethod bank;
-//
-//   const HintPayment({Key? key, required this.bank}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         //for (var hintPaymentData in bank.listHintPayment)
-//           ExpansionTile(
-//             tilePadding: EdgeInsets.symmetric(horizontal: 0),
-//             title: Text(
-//               ""//hintPaymentData.hintText,
-//             ),
-//             children: <Widget>[
-//              // for (var hint in hintPaymentData.listHint)
-//                 ListTile(
-//                   leading: MyBullet(),
-//                   title: Text(""),
-//                 )
-//             ],
-//           ),
-//       ],
-//     );
-//   }
-// }
-//
-// class MyBullet extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Container(
-//       height: 10.0,
-//       width: 10.0,
-//       decoration: new BoxDecoration(
-//         color: Colors.black,
-//         shape: BoxShape.circle,
-//       ),
-//     );
-//   }
-// }
-
 import 'package:cubaapi/theme/colors.dart';
+import 'package:cubaapi/theme/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -187,23 +11,101 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+
+  String payment = "";
+
+  @override
+  void initState() {
+    getPaymentShared();
+    super.initState();
+  }
+
+  void getPaymentShared() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      payment = pref.getString("pay")!;
+    });print(payment);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              height: 80,
-              width: 80,
-              child: Icon(
-                Icons.check,
-                color: ThemeColor.primOrange,
+      body: Container(
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+                top: 0, left: -50, width: 150, height: 150, child: circle()),
+            Positioned(
+                top: 100, right: 40, width: 80, height: 80, child: circle()),
+            Positioned(
+                bottom: -50,
+                right: -10,
+                width: 150,
+                height: 150,
+                child: circle()),
+            Positioned(
+                bottom: 100, left: 40, width: 80, height: 80, child: circle()),
+            Positioned(
+                bottom: 270, right: 60, width: 50, height: 50, child: circle()),
+            Positioned(
+                top: 200, left: 70, width: 50, height: 50, child: circle()),
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.5,
+                  bottom: 10,
+                ),
+                alignment: Alignment.center,
+                child: centerObject(),
               ),
-            )
+            ), //centerObject()),
           ],
         ),
       ),
     );
   }
+
+  Widget centerObject() {
+    return Column(
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+         child: Icon(Icons.check_circle_outline,color: ThemeColor.orange,size: 100,),
+        ),
+        Text(
+          "Thank You For Order!!",
+          style: ThemeFonts.textStyle600
+              .copyWith(fontSize: 30, color: ThemeColor.primOrange),
+        ),
+        Container(
+            padding: EdgeInsets.only(top: 10),
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(payment,style: ThemeFonts.textStyle600,),
+                ],
+
+              ),
+            )
+        ),
+      ],
+    );
+  }
+
+  Widget circle() {
+    return Container(
+        height: 50,
+        width: 50,
+        decoration: ShapeDecoration(
+          color: ThemeColor.primOrange,
+          shape: CircleBorder(),
+        ));
+  }
 }
+
+
+
