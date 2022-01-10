@@ -1,31 +1,90 @@
+import 'dart:convert';
+
+import 'package:cubaapi/model_api/api.dart';
 import 'package:cubaapi/model_api/history_model.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:cubaapi/theme/fonts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:flutter/rendering.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class ReceiptWidget extends StatefulWidget {
-  Map<String, dynamic> history;
-
-  // final FoodModel data;
-
-  ReceiptWidget({Key? key, required this.history});
+class PaymentIdScreen extends StatefulWidget {
+  const PaymentIdScreen({Key? key}) : super(key: key);
 
   @override
-  _ReceiptWidgetState createState() => _ReceiptWidgetState();
+  _PaymentIdScreenState createState() => _PaymentIdScreenState();
 }
 
-class _ReceiptWidgetState extends State<ReceiptWidget> {
-  late final HistoryModel dHistory;
+class _PaymentIdScreenState extends State<PaymentIdScreen> {
+  var history = <HistoryModel>[];
+  String? getId;
   DateTime _dateTime = DateTime.now();
+
+  Future getDataList() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? getId = pref.getString("idPayment")!;
+    print(getId);
+    final response = await http.get(Env().getAfterPayment(getId));
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      print(body);
+      setState(() {
+        Iterable it = jsonDecode(response.body);
+        print(response.body);
+        history = it.map((e) => HistoryModel.fromJson(e)).toList();
+      });
+      return history;
+    }
+  }
 
   String dateTimeOrder(DateTime date) {
     _dateTime = date;
     return DateFormat('dd-MM-yyyy hh:mm a').format(date);
+  }
+
+  int idPayment() {
+    int id=0;
+    history.forEach((item) {
+      id = item.id;
+      print(id);
+    });
+    return id;
+  }
+
+  int price() {
+    int price=0;
+    history.forEach((item) {
+      price = item.price;
+      print(price);
+    });
+    return price;
+  }
+
+  String? invId() {
+    String? inv;
+    history.forEach((item) {
+      inv= item.idPayment;
+      print(inv);
+    });
+    return inv;
+  }
+
+  String? payment() {
+    String? payment;
+    history.forEach((item) {
+      payment= item.payment;
+      print(payment);
+    });
+    return payment;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getDataList();
   }
 
   final _screenshotController = ScreenshotController();
@@ -45,15 +104,14 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: ThemeColor.mantap,
+              color: ThemeColor.primOrange.withOpacity(0.7),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   item(),
-                  SizedBox(height: 20.0),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(top: 20.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -120,7 +178,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
                             border:
-                                Border.all(color: ThemeColor.primOrange, width: 2),
+                            Border.all(color: ThemeColor.primOrange, width: 2),
                             color: Colors.white),
                         child: Center(
                           child: Text(
@@ -145,7 +203,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
   Widget item() {
     return Center(
       child: ClipPath(
-        clipper: MovieTicketClipper(),
+        clipper: ZigZagClipper(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.7,
@@ -164,7 +222,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                       children: [
                         Text("Queue Number:",
                             style: ThemeFonts.textItem.copyWith(fontSize: 16)),
-                        Text(widget.history['esp'].id.toString(),
+                       Text(idPayment().toString(),
                             style: ThemeFonts.tPrice.copyWith(fontSize: 60))
                       ],
                     )),
@@ -193,7 +251,8 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                   Padding(
                     padding: EdgeInsets.only(right: 5.0),
                     child: Text(
-                      dateTimeOrder(widget.history['esp'].date),
+                      "",
+                      //dateTimeOrder(widget.history['esp'].date),
                       style: TextStyle(fontSize: 12.0),
                       textAlign: TextAlign.left,
                     ),
@@ -216,27 +275,15 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                           color: Colors.green,
                           size: 35.0,
                         ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Inv. ",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0),
-                            ),
-                            Text(
-                              widget.history['esp'].idPayment,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0),
-                            ),
-                          ],
+                        title: Text(
+                          "Inv. "+ invId().toString(),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0),
                         ),
                         subtitle: Text(
-                          widget.history['esp'].payment,
+                         payment().toString(),
                           style: TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -260,7 +307,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  "Rp " + widget.history['esp'].price.toString(),
+                  "Rp " +price().toString(),
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

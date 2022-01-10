@@ -148,7 +148,6 @@ class _RegistPageState extends State<RegistPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(
           height: 10,
@@ -166,7 +165,6 @@ class _RegistPageState extends State<RegistPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(
           height: 10,
@@ -194,7 +192,6 @@ class _RegistPageState extends State<RegistPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(height: 10),
         TextFormField(
@@ -211,7 +208,6 @@ class _RegistPageState extends State<RegistPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(
           height: 10,
@@ -229,7 +225,6 @@ class _RegistPageState extends State<RegistPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(
           height: 10,

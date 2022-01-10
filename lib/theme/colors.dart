@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ThemeColor {
   static Color red = Color(0xFFE74C3C);
+  static Color mantap = Color(0xFFFCAB6E);
   static Color orange = Color(0xFFF39C12);
   static Color primOrange = Color(0xFFF56D06);
   static Color primaryTextColor = Color(0xFF000000);

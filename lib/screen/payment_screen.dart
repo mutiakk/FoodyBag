@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cubaapi/screen/receipt_widget_payment.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:cubaapi/theme/fonts.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +14,24 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-
   String payment = "";
 
   @override
   void initState() {
     getPaymentShared();
+    Timer(
+        Duration(seconds: 8),
+        () => Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => PaymentIdScreen())));
     super.initState();
   }
 
   void getPaymentShared() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      payment = pref.getString("pay")!;
-    });print(payment);
+      payment = pref.getString("yuhuMantap")!;
+    });
+    print(payment);
   }
 
   @override
@@ -71,7 +78,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Container(
           width: 100,
           height: 100,
-         child: Icon(Icons.check_circle_outline,color: ThemeColor.orange,size: 100,),
+          child: Icon(
+            Icons.check_circle_outline,
+            color: ThemeColor.orange,
+            size: 100,
+          ),
         ),
         Text(
           "Thank You For Order!!",
@@ -86,12 +97,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(payment,style: ThemeFonts.textStyle600,),
+                  Text(
+                    payment,
+                    style: ThemeFonts.textStyle600,
+                  ),
                 ],
-
               ),
-            )
-        ),
+            )),
       ],
     );
   }
@@ -106,6 +118,3 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ));
   }
 }
-
-
-

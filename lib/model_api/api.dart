@@ -37,4 +37,7 @@ class Env{
   Uri postPaymentHistory(){
     return(Uri.parse(baseURL+"/api/payment-history"));
   }
+  Uri getAfterPayment(String idUser){
+    return(Uri.parse(baseURL+"/api/payment-after/"+idUser));
+  }
 }

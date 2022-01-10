@@ -57,6 +57,13 @@ class _HistoryPageState extends State<HistoryPage> {
           "Order History",
           style: ThemeFonts.textStyle500.copyWith(color: ThemeColor.white),
         ),backgroundColor: ThemeColor.primOrange,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+        ),
       ),
       body: Center(
         child: ListView.builder(

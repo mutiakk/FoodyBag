@@ -153,7 +153,8 @@ class _KeranjangState extends State<Keranjang> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: ThemeColor.primOrange,
-        title: Text("My Cart"),
+        title: Text("My Cart", style: ThemeFonts.textStyle500.copyWith(color: ThemeColor.white),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -184,10 +185,7 @@ class _KeranjangState extends State<Keranjang> {
                       .copyWith(fontSize: 18, color: ThemeColor.white)),
               onPressed: () {
                 if (cartTotalPrice() != 0) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CheckoutScreen()));
+                  _validateCartToCO(context);
                 } else {
                   _validateCart(context);
                 }
@@ -425,5 +423,58 @@ class _KeranjangState extends State<Keranjang> {
                             fontFamily: "NunitoSans", color: Colors.white)))
               ],
             ));
+  }
+
+  void _validateCartToCO(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+          elevation: 24,
+          title: Text(
+              "Are you sure to checkout your item in the cart?",
+              maxLines: 2,
+              style: ThemeFonts.textStyle600.copyWith(fontSize: 18),
+              textAlign: TextAlign.left),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //Text(),
+              Text(
+                "Please check your item. Clik OK if you want to continue." ,
+                style: ThemeFonts.textStyle200
+                    .copyWith(fontSize: 12, color: ThemeColor.black),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              style:
+              TextButton.styleFrom(backgroundColor: Color(0xffE5E5E5)),
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: Text("Cancel", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: ThemeColor.primOrange),
+                onPressed: () {
+                  setState(() {
+                    if (cartTotalPrice() != 0) {
+                      int count = 0;
+                      Navigator.popUntil(context, (route) {
+                        return count++ == 2;
+                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CheckoutScreen()));
+                    }
+                  });
+                },
+                child: const Text('OK',
+                    style: TextStyle(
+                        fontFamily: "NunitoSans", color: Colors.white)))
+          ],
+        ));
   }
 }

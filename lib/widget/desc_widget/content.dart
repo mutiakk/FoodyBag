@@ -127,23 +127,6 @@ class ContentDesc extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
           ),
-          /**Container(
-              padding: EdgeInsets.all(5),
-              child: RaisedButton(
-                onPressed: () {},
-                color: Colors.blueGrey,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Checkout',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Icon(Icons.shopping_cart)
-                  ],
-                ),
-              )),**/
         ],
       ),
     );

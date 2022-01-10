@@ -49,18 +49,22 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         print("login token " + body["msg"]);
+        print(body["user"]["fullname"]);
+        print(body["user"]["username"]);
         // List<User> userModel=(body['user']as Iterable).map((e) => User.fromJson(e)).toList();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("user", body['token']);
-        Map<String, dynamic> user = {
-          'id': body['user']["username"],
-          'username': body['user']["username"],
-          'password': body['user']["password"],
-          'registered': body['user']["registered"],
-          'login': body['user']["login"],
-        };
-
-        await prefs.setString("login", jsonEncode(user));
+        await prefs.setString ("name", body ['user']['fullname']);
+        await prefs.setString ("username", body ['user']['username']);
+        // Map<String, dynamic> user = {
+        //   'id': body['user']["username"],
+        //   'username': body['user']["username"],
+        //   'password': body['user']["password"],
+        //   'registered': body['user']["registered"],
+        //   'login': body['user']["login"],
+        // };
+        //
+        // await prefs.setString("login", jsonEncode(user));
         await prefs.setString("user", body["user"]["id"]);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body["msg"])));
@@ -79,7 +83,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  FocusNode myFocusNode = new FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +99,6 @@ class _LoginPageState extends State<LoginPage> {
                   bottomRight: Radius.circular(100),
                 ),
                 color: ThemeColor.primOrange),
-            // child: Padding(
-            //   padding: EdgeInsets.fromLTRB(10,20,10,0),
-            //   child: Container(
                    alignment: Alignment.bottomLeft,
                   child: Padding(padding: EdgeInsets.only(top: 10),
                   child:Text(
@@ -165,7 +165,6 @@ class _LoginPageState extends State<LoginPage> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide(color: ThemeColor.primOrange, width: 2)),
           ),
-          autofocus: true,
         ),
         SizedBox(height: 20),
         ElevatedButton(

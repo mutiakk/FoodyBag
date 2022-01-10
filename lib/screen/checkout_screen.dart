@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cubaapi/model_api/api.dart';
 import 'package:cubaapi/model_api/cart_model.dart';
+import 'package:cubaapi/model_api/item.dart';
 import 'package:cubaapi/screen/payment_screen.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:cubaapi/theme/fonts.dart';
@@ -20,15 +21,20 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   List<CartFood> cart = [];
-  String? selectedValue;
+  Item? selectedUser;
+
+  List<Item> itemVa = Item.users();
+  List<DropdownMenuItem<Item>>? _dropdownMenuItems;
+
   List category = [];
   String setId = "";
   String? holder;
-  String? getId;
+  String method="";
+  String getId = "";
 
   String getRandString() {
     var random = Random.secure();
-    int len = 10;
+    int len = 5;
     var values = List<int>.generate(len, (i) => random.nextInt(25));
     return base64UrlEncode(values);
   }
@@ -41,9 +47,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   void getingId() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      getId = pref.getString("idPayment")!;
-    });
+    getId = pref.getString("idPayment")!;
     print(getId);
   }
 
@@ -70,10 +74,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   void getDropDownItem() {
     setState(() {
-      holder = selectedValue!;
+      holder = selectedUser!.name;
     });
     print(holder);
   }
+
+  void getTutor() {
+    setState(() {
+      method = selectedUser!.method;
+    });
+    print(method);
+  }
+
+  List<DropdownMenuItem<Item>> buildDropdownMenuItems(List itemvA) {
+    List<DropdownMenuItem<Item>> items = [];
+    for (Item va in itemvA) {
+      items.add(
+        DropdownMenuItem(
+          value: va,
+          child: Text(va.name,style: ThemeFonts.textStyle300.copyWith(fontSize: 14,color: ThemeColor.orange)),
+        ),
+      );
+    }
+    return items;
+  }
+
 
   @override
   void initState() {
@@ -83,6 +108,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     postPayment();
     settingId();
     getingId();
+    _dropdownMenuItems = buildDropdownMenuItems(itemVa);
+    selectedUser = _dropdownMenuItems![0].value;
+    super.initState();
   }
 
   void validatePayment(context) {
@@ -104,18 +132,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 children: [
                   //Text(),
                   Text(
-                    "Send to 085780196976 and Add notes with your Payment ID.",
+                    selectedUser!.method +" and Add notes with your Payment ID." ,
                     style: ThemeFonts.textStyle200
                         .copyWith(fontSize: 12, color: ThemeColor.black),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("your ID is " ,style: ThemeFonts.textStyle200
-                          .copyWith(fontSize: 12, color: ThemeColor.black),
+                      Text(
+                        "your ID is ",
+                        style: ThemeFonts.textStyle200
+                            .copyWith(fontSize: 12, color: ThemeColor.black),
                       ),
-                      Text(getId!,style: ThemeFonts.textStyle200
-                          .copyWith(fontSize: 12, color: ThemeColor.orange,fontWeight: FontWeight.bold),
+                      Text(
+                        getId,
+                        style: ThemeFonts.textStyle200.copyWith(
+                            fontSize: 12,
+                            color: ThemeColor.orange,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -163,76 +197,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-          elevation: 24,
-          title: Text(
-              "Choose Payment Method ",
-              maxLines: 2,
-              style: ThemeFonts.textStyle600.copyWith(fontSize: 18),
-              textAlign: TextAlign.left),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              //Text(),
-              Text(
-                "Send to 085780196976 and Add notes with your Payment ID.",
-                style: ThemeFonts.textStyle200
-                    .copyWith(fontSize: 12, color: ThemeColor.black),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("your ID is " ,style: ThemeFonts.textStyle200
-                      .copyWith(fontSize: 12, color: ThemeColor.black),
-                  ),
-                  Text(getId!,style: ThemeFonts.textStyle200
-                      .copyWith(fontSize: 12, color: ThemeColor.orange,fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              style:
-              TextButton.styleFrom(backgroundColor: Color(0xffE5E5E5)),
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: Text("Cancel", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-                style: TextButton.styleFrom(
-                    backgroundColor: ThemeColor.primOrange),
-                onPressed: () {
-                  setState(() {
-                    if (cartTotalPrice() == null) {
-                      return null;
-                    } else {
-                      setState(() {
-                        postPayment();
-                        postHistory();
-                      });
-                      int count = 0;
-                      Navigator.popUntil(context, (route) {
-                        return count++ == 2;
-                      });
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => PaymentScreen()),
-                      );
-                    }
-                  });
-                },
-                child: const Text('OK',
-                    style: TextStyle(
-                        fontFamily: "NunitoSans", color: Colors.white)))
-          ],
-        ));
+              elevation: 24,
+              title: Text("Choose Payment Method ",
+                  maxLines: 2,
+                  style: ThemeFonts.textStyle600.copyWith(fontSize: 18),
+                  textAlign: TextAlign.left),
+              actions: <Widget>[
+                TextButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: ThemeColor.primOrange),
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
+                    child: const Text('OK',
+                        style: TextStyle(
+                            fontFamily: "NunitoSans", color: Colors.white)))
+              ],
+            ));
   }
+
   Future postPayment() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String idUser = pref.getString("user")!;
     var response = await http.post(Env().postPayment(),
-        body: jsonEncode(
-            {"price": cartTotalPrice(), "payment": holder, "user": idUser}),
+        body: jsonEncode({
+          "price": cartTotalPrice(),
+          "payment": holder,
+          "user": idUser,
+          "idPayment": getId
+        }),
         headers: {"Content-Type": "application/json"});
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -252,7 +245,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       final body = jsonDecode(response.body);
       print(body["msg"]);
       SharedPreferences pref = await SharedPreferences.getInstance();
-      await pref.setString("pay", body["msg"]);
+      await pref.setString("yuhuMantap", body["msg"]);
     }
   }
 
@@ -295,13 +288,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       bottomNavigationBar: Container(
           margin: EdgeInsets.all(20),
           child: RaisedButton(
-            child: Text("PAY"),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                //side: BorderSide(color: Colors.red)
+            ),
+            color: ThemeColor.white,
+            child: Text("PAY",style: ThemeFonts.tPrice.copyWith(color: ThemeColor.black),),
             onPressed: () {
-              if (selectedValue != null) {
+              if (selectedUser != null) {
                 getDropDownItem();
                 print(getId);
                 setState(() {
                   validatePayment(context);
+                });
+              } else {
+                setState(() {
+                  noPayment(context);
                 });
               }
             },
@@ -335,7 +337,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 style: ThemeFonts.textStyle500,
               ),
               rbPayment(),
-              //Text('$holder')
             ],
           ),
         ),
@@ -378,7 +379,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             size: 75,
           ),
           Text(
-            "Inv.  " + getId!,
+            "Inv.  " + getId,
             style: ThemeFonts.textItem.copyWith(fontSize: 18),
           ),
         ]));
@@ -408,28 +409,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       children: [
         DropdownButton(
           isExpanded: true,
-          hint: Text(
-            'Choose Payment',
-            style: ThemeFonts.textStyle300.copyWith(fontSize: 14),
-          ),
-          value: selectedValue,
-          items: category
-              .map(
-                (map) => DropdownMenuItem(
-                  child: Text(
-                    map['nama_va'],
-                    style: ThemeFonts.textStyle200.copyWith(fontSize: 18),
-                  ),
-                  value: map['nama_va'],
-                ),
-              )
-              .toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value as String?;
-            });
-          },
-        ),
+          value: selectedUser,
+            hint: Text(
+              'Choose Payment',
+              style: ThemeFonts.textStyle300.copyWith(fontSize: 14),
+            ),
+          items: _dropdownMenuItems,
+          onChanged: (selected) {
+              setState(() {
+                selectedUser = selected as Item?;
+              });
+          }
+        )
       ],
     );
   }
