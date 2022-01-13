@@ -28,9 +28,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   void getPaymentShared() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      payment = pref.getString("yuhuMantap")!;
-    });
+    payment = pref.getString("yuhuMantap");
     print(payment);
   }
 

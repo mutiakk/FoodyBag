@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cubaapi/screen/home_screen.dart';
 import 'package:cubaapi/screen/login_screen.dart';
 import 'package:cubaapi/theme/colors.dart';
 import 'package:cubaapi/theme/fonts.dart';
@@ -33,8 +34,54 @@ class _RegistPageState extends State<RegistPage> {
     });
   }
 
+  void _validateRegister(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+              elevation: 24,
+              title: Text("is the data entered is correct?",
+                  maxLines: 2,
+                  style: ThemeFonts.textStyle600.copyWith(fontSize: 18),
+                  textAlign: TextAlign.left),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  //Text(),
+                  Align(child: Text(
+                    "Please check again.",
+                    style: ThemeFonts.textStyle200
+                        .copyWith(fontSize: 12, color: ThemeColor.black),
+                  ),alignment: Alignment.topLeft,)
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style:
+                      TextButton.styleFrom(backgroundColor: Color(0xffE5E5E5)),
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: Text("Cancel", style: TextStyle(color: Colors.black)),
+                ),
+                TextButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: ThemeColor.primOrange),
+                    onPressed: () {
+                      setState(() {
+                        int count = 0;
+                        Navigator.popUntil(context, (route) {
+                          return count++ == 2;
+                        });
+                       _regist();
+                      });
+                    },
+                    child: const Text('OK',
+                        style: TextStyle(
+                            fontFamily: "NunitoSans", color: Colors.white)))
+              ],
+            ));
+  }
+
   void _regist() async {
-    //Ga boleh kosong
     if (emailControl.text.isNotEmpty &&
         passControl.text.isNotEmpty &&
         passControl2.text.isNotEmpty) {
@@ -55,7 +102,7 @@ class _RegistPageState extends State<RegistPage> {
         await prefs.setString("register", body['message']);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LoginPage()),
-                (route) => false);
+            (route) => false);
       } else if (response.statusCode == 409) {
         final body = jsonDecode(response.body);
         ScaffoldMessenger.of(context)
@@ -68,16 +115,6 @@ class _RegistPageState extends State<RegistPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Blank Value')));
     }
-
-// if (emailControl.text.isNotEmpty && passControl.text.isNotEmpty) {
-    //   SharedPreferences prefs= await SharedPreferences.getInstance();
-    //   prefs.setBool('isUser', true);
-    //
-    //   Future.delayed(Duration(seconds: 2));
-    //   if (emailControl.text == 'mancuy' && passControl.text == 'mancuy') {
-    //     Navigator.pushReplacement(
-    //         context, MaterialPageRoute(builder: (context) => HomePage()));
-    //   }
     // }
   }
 
@@ -97,15 +134,16 @@ class _RegistPageState extends State<RegistPage> {
                 ),
                 color: ThemeColor.primOrange),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(10,40,0,0),
+              padding: EdgeInsets.fromLTRB(10, 40, 0, 0),
               child: Container(
                   //alignment: Alignment.bottomRight,
-                  child: Align(alignment: Alignment.bottomRight,
-                    child:Text(
-                      'Register',
-                      style: ThemeFonts.textStyle400,
-                    ),
-                  )),
+                  child: Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  'Register',
+                  style: ThemeFonts.textStyle400,
+                ),
+              )),
             ),
           ),
           Padding(
@@ -232,7 +270,7 @@ class _RegistPageState extends State<RegistPage> {
         RaisedButton(
           color: ThemeColor.primOrange,
           onPressed: () {
-            _regist();
+            _validateRegister(context);
           },
           child: Text(
             "Register",

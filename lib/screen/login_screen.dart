@@ -56,15 +56,6 @@ class _LoginPageState extends State<LoginPage> {
         await prefs.setString("user", body['token']);
         await prefs.setString ("name", body ['user']['fullname']);
         await prefs.setString ("username", body ['user']['username']);
-        // Map<String, dynamic> user = {
-        //   'id': body['user']["username"],
-        //   'username': body['user']["username"],
-        //   'password': body['user']["password"],
-        //   'registered': body['user']["registered"],
-        //   'login': body['user']["login"],
-        // };
-        //
-        // await prefs.setString("login", jsonEncode(user));
         await prefs.setString("user", body["user"]["id"]);
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(body["msg"])));
@@ -129,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
           keyboardType: TextInputType.text,
           controller: emailControl,
           decoration: InputDecoration(
-            labelText: 'Name',
+            labelText: 'Username',
             icon: Icon(Icons.person),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
